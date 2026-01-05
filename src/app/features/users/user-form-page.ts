@@ -11,46 +11,58 @@ import { User } from '../../core/models/user';
   template: `
     <div class="max-w-2xl mx-auto">
       <div class="flex items-center justify-between mb-6">
-        <h2 class="text-2xl font-bold text-gray-800">
+        <h2 class="text-2xl font-bold text-gray-800 dark:text-white">
           {{ isEditMode() ? 'Edit User' : 'New User' }}
         </h2>
-        <a routerLink="/users" class="text-gray-600 hover:text-gray-900">Cancel</a>
+        <a
+          routerLink="/users"
+          class="text-gray-600 hover:text-gray-900 dark:text-slate-400 dark:hover:text-white transition-colors"
+          >Cancel</a
+        >
       </div>
 
-      <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+      <div
+        class="bg-white dark:bg-slate-800 rounded-lg shadow-sm border border-gray-200 dark:border-slate-700 p-6 transition-colors"
+      >
         <form [formGroup]="userForm" (ngSubmit)="onSubmit()" class="space-y-6">
           <div>
-            <label for="name" class="block text-sm font-medium text-gray-700">Name</label>
+            <label for="name" class="block text-sm font-medium text-gray-700 dark:text-slate-300"
+              >Name</label
+            >
             <input
               type="text"
               id="name"
               formControlName="name"
-              class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+              class="block w-full rounded-md border-0 py-2.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 dark:bg-slate-700 dark:text-white dark:ring-slate-600 dark:placeholder-slate-400 transition-colors"
             />
             @if (name?.invalid && name?.touched) {
-            <p class="mt-1 text-sm text-red-600">Name is required</p>
+            <p class="mt-1 text-sm text-red-600 dark:text-red-400">Name is required</p>
             }
           </div>
 
           <div>
-            <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+            <label for="email" class="block text-sm font-medium text-gray-700 dark:text-slate-300"
+              >Email</label
+            >
             <input
               type="email"
               id="email"
               formControlName="email"
-              class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+              class="block w-full rounded-md border-0 py-2.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 dark:bg-slate-700 dark:text-white dark:ring-slate-600 dark:placeholder-slate-400 transition-colors"
             />
             @if (email?.invalid && email?.touched) {
-            <p class="mt-1 text-sm text-red-600">Valid email is required</p>
+            <p class="mt-1 text-sm text-red-600 dark:text-red-400">Valid email is required</p>
             }
           </div>
 
           <div>
-            <label for="role" class="block text-sm font-medium text-gray-700">Role</label>
+            <label for="role" class="block text-sm font-medium text-gray-700 dark:text-slate-300"
+              >Role</label
+            >
             <select
               id="role"
               formControlName="role"
-              class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+              class="block w-full rounded-md border-0 py-2.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 dark:bg-slate-700 dark:text-white dark:ring-slate-600 transition-colors"
             >
               <option value="user">User</option>
               <option value="admin">Admin</option>
@@ -63,9 +75,13 @@ import { User } from '../../core/models/user';
               type="checkbox"
               id="active"
               formControlName="active"
-              class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
+              class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600 dark:bg-slate-700 dark:border-slate-600"
             />
-            <label for="active" class="ml-2 block text-sm text-gray-900">Active</label>
+            <label
+              for="active"
+              class="ml-2 block text-sm text-gray-900 dark:text-slate-300 transition-colors"
+              >Active</label
+            >
           </div>
 
           <div class="flex justify-end pt-4">
