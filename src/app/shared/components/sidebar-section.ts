@@ -33,4 +33,4 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
   styles: [],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class Sidebar {}
+export class SidebarSection {}

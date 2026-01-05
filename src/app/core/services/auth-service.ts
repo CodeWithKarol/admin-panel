@@ -1,7 +1,7 @@
 import { Injectable, signal, computed, inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { LoginCredentials, AuthResponse } from '../models/auth.model';
-import { User } from '../models/user.model';
+import { LoginCredentials, AuthResponse } from '../models/auth';
+import { User } from '../models/user';
 import { of, delay, tap, Observable } from 'rxjs';
 
 @Injectable({

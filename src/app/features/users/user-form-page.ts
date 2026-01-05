@@ -2,8 +2,8 @@ import { Component, ChangeDetectionStrategy, inject, signal, input, OnInit } fro
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { UserService } from '../../core/services/user.service';
-import { User } from '../../core/models/user.model';
+import { UserService } from '../../core/services/user-service';
+import { User } from '../../core/models/user';
 
 @Component({
   selector: 'app-user-form',
@@ -84,7 +84,7 @@ import { User } from '../../core/models/user.model';
   styles: [],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class UserForm implements OnInit {
+export class UserFormPage implements OnInit {
   private fb = inject(FormBuilder);
   private userService = inject(UserService);
   private router = inject(Router);

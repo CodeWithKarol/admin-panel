@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { UserService } from '../../core/services/user.service';
+import { UserService } from '../../core/services/user-service';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { debounceTime, distinctUntilChanged } from 'rxjs';
@@ -120,7 +120,7 @@ import { debounceTime, distinctUntilChanged } from 'rxjs';
   styles: [],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class UserList {
+export class UserListPage {
   private userService = inject(UserService);
 
   // Signals

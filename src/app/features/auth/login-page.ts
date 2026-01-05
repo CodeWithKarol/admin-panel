@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { AuthService } from '../../core/services/auth.service';
+import { AuthService } from '../../core/services/auth-service';
 import { Router } from '@angular/router';
 
 @Component({
@@ -63,7 +63,7 @@ import { Router } from '@angular/router';
   styles: [],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class Login {
+export class LoginPage {
   private fb = inject(FormBuilder);
   private authService = inject(AuthService);
 

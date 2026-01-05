@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { AuthService } from '../../core/services/auth.service';
+import { AuthService } from '../../core/services/auth-service';
 import { RouterLink } from '@angular/router';
 
 @Component({
@@ -22,7 +22,7 @@ import { RouterLink } from '@angular/router';
   styles: [],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class Header {
+export class HeaderSection {
   authService = inject(AuthService);
 
   logout() {

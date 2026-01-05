@@ -52,7 +52,7 @@ import { CommonModule } from '@angular/common';
   styles: [],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class Dashboard {
+export class DashboardPage {
   stats = [
     {
       label: 'Total Users',
