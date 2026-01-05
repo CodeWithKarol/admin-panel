@@ -14,28 +14,30 @@ import { User } from '../../core/models/user';
   template: `
     <div class="space-y-6">
       <div class="flex items-center justify-between">
-        <h2 class="text-2xl font-bold text-gray-800">Users</h2>
+        <h2 class="text-2xl font-bold text-gray-800 dark:text-white">Users</h2>
         <a
           routerLink="new"
-          class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition-colors"
+          class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition-colors shadow-sm"
         >
           Add User
         </a>
       </div>
 
       <!-- Filters -->
-      <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200 flex gap-4">
+      <div
+        class="bg-white dark:bg-slate-800 p-4 rounded-lg shadow-sm border border-gray-200 dark:border-slate-700 flex gap-4 transition-colors duration-300"
+      >
         <div class="flex-1">
           <input
             [formControl]="searchControl"
             type="text"
             placeholder="Search users..."
-            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+            class="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 bg-white dark:bg-slate-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-slate-400 transition-colors"
           />
         </div>
         <select
           [formControl]="roleControl"
-          class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+          class="px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 bg-white dark:bg-slate-700 text-gray-900 dark:text-white transition-colors"
         >
           <option value="">All Roles</option>
           <option value="admin">Admin</option>
@@ -45,73 +47,86 @@ import { User } from '../../core/models/user';
       </div>
 
       <!-- Table -->
-      <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
-        <table class="min-w-full divide-y divide-gray-200">
-          <thead class="bg-gray-50">
+      <div
+        class="bg-white dark:bg-slate-800 rounded-lg shadow-sm border border-gray-200 dark:border-slate-700 overflow-hidden transition-colors duration-300"
+      >
+        <table class="min-w-full divide-y divide-gray-200 dark:divide-slate-700">
+          <thead class="bg-gray-50 dark:bg-slate-700/50">
             <tr>
               <th
-                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-slate-400 uppercase tracking-wider"
               >
                 Name
               </th>
               <th
-                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-slate-400 uppercase tracking-wider"
               >
                 Email
               </th>
               <th
-                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-slate-400 uppercase tracking-wider"
               >
                 Role
               </th>
               <th
-                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-slate-400 uppercase tracking-wider"
               >
                 Status
               </th>
               <th
-                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-slate-400 uppercase tracking-wider"
               >
                 Actions
               </th>
             </tr>
           </thead>
-          <tbody class="bg-white divide-y divide-gray-200">
+          <tbody class="bg-white dark:bg-slate-800 divide-y divide-gray-200 dark:divide-slate-700">
             @for (user of filteredUsers(); track user.id) {
-            <tr>
+            <tr class="hover:bg-gray-50 dark:hover:bg-slate-700/50 transition-colors">
               <td class="px-6 py-4 whitespace-nowrap">
-                <div class="text-sm font-medium text-gray-900">{{ user.name }}</div>
+                <div class="text-sm font-medium text-gray-900 dark:text-white">{{ user.name }}</div>
               </td>
               <td class="px-6 py-4 whitespace-nowrap">
-                <div class="text-sm text-gray-500">{{ user.email }}</div>
+                <div class="text-sm text-gray-500 dark:text-slate-400">{{ user.email }}</div>
               </td>
               <td class="px-6 py-4 whitespace-nowrap">
                 <span
-                  class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800 capitalize"
+                  class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300 capitalize"
                 >
                   {{ user.role }}
                 </span>
               </td>
               <td class="px-6 py-4 whitespace-nowrap">
                 <span
-                  [class]="user.active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'"
+                  [class]="
+                    user.active
+                      ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400'
+                      : 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400'
+                  "
                   class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full"
                 >
                   {{ user.active ? 'Active' : 'Inactive' }}
                 </span>
               </td>
               <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                <a [routerLink]="[user.id]" class="text-indigo-600 hover:text-indigo-900 mr-4"
+                <a
+                  [routerLink]="[user.id]"
+                  class="text-indigo-600 hover:text-indigo-900 dark:text-indigo-400 dark:hover:text-indigo-300 mr-4 transition-colors"
                   >Edit</a
                 >
-                <button (click)="initDeleteUser(user)" class="text-red-600 hover:text-red-900">
+                <button
+                  (click)="initDeleteUser(user)"
+                  class="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300 transition-colors"
+                >
                   Delete
                 </button>
               </td>
             </tr>
             } @empty {
             <tr>
-              <td colspan="5" class="px-6 py-4 text-center text-gray-500">No users found.</td>
+              <td colspan="5" class="px-6 py-4 text-center text-gray-500 dark:text-slate-400">
+                No users found.
+              </td>
             </tr>
             }
           </tbody>
