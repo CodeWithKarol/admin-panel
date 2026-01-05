@@ -15,7 +15,7 @@ import { LayoutService } from '../../core/services/layout-service';
       <div class="fixed inset-0 z-50 md:hidden">
         <!-- Backdrop -->
         <div
-          class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm transition-opacity"
+          class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm transition-opacity cursor-pointer"
           (click)="layoutService.closeSidebar()"
         ></div>
 

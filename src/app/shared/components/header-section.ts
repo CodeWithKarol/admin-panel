@@ -65,7 +65,10 @@ import { LucideAngularModule, Menu, Search, Sun, Moon, Bell } from 'lucide-angul
 
           <!-- Dropdown -->
           @if (showNotifications()) {
-          <div class="fixed inset-0 z-40" (click)="showNotifications.set(false)"></div>
+          <div
+            class="fixed inset-0 z-40 cursor-pointer"
+            (click)="showNotifications.set(false)"
+          ></div>
           <div
             class="absolute right-0 mt-2 w-80 bg-white dark:bg-slate-800 rounded-lg shadow-lg border border-slate-200 dark:border-slate-700 py-2 z-50"
           >

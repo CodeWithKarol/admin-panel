@@ -7,7 +7,7 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { debounceTime, distinctUntilChanged } from 'rxjs';
 import { DeleteUserDialog } from './delete-user-dialog';
 import { User } from '../../core/models/user';
-import { LucideAngularModule, ChevronDown } from 'lucide-angular';
+import { LucideAngularModule, ChevronDown, Pencil, Trash2 } from 'lucide-angular';
 
 @Component({
   selector: 'app-user-list',
@@ -117,17 +117,22 @@ import { LucideAngularModule, ChevronDown } from 'lucide-angular';
                 </span>
               </td>
               <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                <a
-                  [routerLink]="[user.id]"
-                  class="text-indigo-600 hover:text-indigo-900 dark:text-indigo-400 dark:hover:text-indigo-300 mr-4 transition-colors"
-                  >Edit</a
-                >
-                <button
-                  (click)="initDeleteUser(user)"
-                  class="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300 transition-colors"
-                >
-                  Delete
-                </button>
+                <div class="flex items-center gap-3">
+                  <a
+                    [routerLink]="[user.id]"
+                    class="text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
+                    title="Edit user"
+                  >
+                    <lucide-angular [img]="Pencil" class="w-5 h-5"></lucide-angular>
+                  </a>
+                  <button
+                    (click)="initDeleteUser(user)"
+                    class="text-slate-400 hover:text-red-600 dark:hover:text-red-400 transition-colors"
+                    title="Delete user"
+                  >
+                    <lucide-angular [img]="Trash2" class="w-5 h-5"></lucide-angular>
+                  </button>
+                </div>
               </td>
             </tr>
             } @empty {
@@ -175,6 +180,9 @@ export class UserListPage {
   userToDelete = signal<User | null>(null);
 
   // Computed filtered users
+  readonly Pencil = Pencil;
+  readonly Trash2 = Trash2;
+
   filteredUsers = computed(() => {
     const allUsers = this.users();
     const search = this.searchTerm()?.toLowerCase() ?? '';
