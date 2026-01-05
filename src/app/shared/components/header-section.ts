@@ -1,6 +1,7 @@
 import { Component, ChangeDetectionStrategy, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../core/services/auth-service';
+import { LayoutService } from '../../core/services/layout-service';
 import { LucideAngularModule, Menu, Search, Sun, Moon, Bell } from 'lucide-angular';
 
 @Component({
@@ -13,6 +14,7 @@ import { LucideAngularModule, Menu, Search, Sun, Moon, Bell } from 'lucide-angul
       <!-- Left: Mobile Menu & Search -->
       <div class="flex items-center gap-4 flex-1">
         <button
+          (click)="toggleSidebar()"
           class="md:hidden p-2 -ml-2 text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg"
         >
           <lucide-angular [img]="Menu" class="w-6 h-6"></lucide-angular>
@@ -82,6 +84,7 @@ import { LucideAngularModule, Menu, Search, Sun, Moon, Bell } from 'lucide-angul
 })
 export class HeaderSection {
   authService = inject(AuthService);
+  layoutService = inject(LayoutService);
 
   readonly Menu = Menu;
   readonly Search = Search;
@@ -95,5 +98,9 @@ export class HeaderSection {
 
   toggleDarkMode() {
     document.documentElement.classList.toggle('dark');
+  }
+
+  toggleSidebar() {
+    this.layoutService.toggleSidebar();
   }
 }

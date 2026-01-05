@@ -1,7 +1,8 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { LucideAngularModule, Zap, LayoutGrid, Users } from 'lucide-angular';
+import { LayoutService } from '../../core/services/layout-service';
 
 @Component({
   selector: 'app-sidebar',
@@ -28,6 +29,7 @@ import { LucideAngularModule, Zap, LayoutGrid, Users } from 'lucide-angular';
           routerLink="/dashboard"
           routerLinkActive="bg-indigo-50 text-indigo-600 dark:bg-indigo-900/20 dark:text-indigo-400"
           [routerLinkActiveOptions]="{ exact: true }"
+          (click)="closeSidebar()"
           class="group flex items-center px-3 py-2.5 text-sm font-medium rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors"
         >
           <lucide-angular
@@ -44,6 +46,7 @@ import { LucideAngularModule, Zap, LayoutGrid, Users } from 'lucide-angular';
         <a
           routerLink="/users"
           routerLinkActive="bg-indigo-50 text-indigo-600 dark:bg-indigo-900/20 dark:text-indigo-400"
+          (click)="closeSidebar()"
           class="group flex items-center px-3 py-2.5 text-sm font-medium rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors"
         >
           <lucide-angular
@@ -74,7 +77,12 @@ import { LucideAngularModule, Zap, LayoutGrid, Users } from 'lucide-angular';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SidebarSection {
+  private layoutService = inject(LayoutService);
   readonly Zap = Zap;
   readonly LayoutGrid = LayoutGrid;
   readonly Users = Users;
+
+  closeSidebar() {
+    this.layoutService.closeSidebar();
+  }
 }
