@@ -25,8 +25,9 @@ import { Router } from '@angular/router';
               type="email"
               id="email"
               formControlName="email"
-              class="block w-full rounded-md border-0 py-2.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 dark:bg-slate-700 dark:text-white dark:ring-slate-600 dark:placeholder-slate-400 transition-colors"
-              [class.ring-red-500]="email?.invalid && email?.touched"
+              class="block w-full rounded-md border border-gray-300 px-3 py-2.5 text-gray-900 shadow-sm placeholder:text-gray-400 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm dark:bg-slate-700 dark:border-slate-600 dark:text-white dark:placeholder-slate-400 transition-colors"
+              [class.border-red-500]="email?.invalid && email?.touched"
+              [class.focus:border-red-500]="email?.invalid && email?.touched"
               [class.focus:ring-red-500]="email?.invalid && email?.touched"
             />
             @if (email?.invalid && email?.touched) {
@@ -44,8 +45,9 @@ import { Router } from '@angular/router';
               type="password"
               id="password"
               formControlName="password"
-              class="block w-full rounded-md border-0 py-2.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 dark:bg-slate-700 dark:text-white dark:ring-slate-600 dark:placeholder-slate-400 transition-colors"
-              [class.ring-red-500]="password?.invalid && password?.touched"
+              class="block w-full rounded-md border border-gray-300 px-3 py-2.5 text-gray-900 shadow-sm placeholder:text-gray-400 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm dark:bg-slate-700 dark:border-slate-600 dark:text-white dark:placeholder-slate-400 transition-colors"
+              [class.border-red-500]="password?.invalid && password?.touched"
+              [class.focus:border-red-500]="password?.invalid && password?.touched"
               [class.focus:ring-red-500]="password?.invalid && password?.touched"
             />
             @if (password?.invalid && password?.touched) {
