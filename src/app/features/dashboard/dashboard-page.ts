@@ -2,10 +2,19 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RevenueChart } from './ui/revenue-chart';
 import { UserActivityChart } from './ui/user-activity-chart';
+import {
+  LucideAngularModule,
+  Users,
+  DollarSign,
+  Zap,
+  Ticket,
+  TrendingUp,
+  TrendingDown,
+} from 'lucide-angular';
 
 @Component({
   selector: 'app-dashboard',
-  imports: [CommonModule, RevenueChart, UserActivityChart],
+  imports: [CommonModule, RevenueChart, UserActivityChart, LucideAngularModule],
   template: `
     <div class="space-y-8">
       <!-- Page Header -->
@@ -48,7 +57,7 @@ import { UserActivityChart } from './ui/user-activity-chart';
             <div
               [class]="'p-2.5 rounded-lg ' + stat.colorClass + ' bg-opacity-10 dark:bg-opacity-20'"
             >
-              <span class="text-xl">{{ stat.icon }}</span>
+              <lucide-angular [img]="stat.icon" class="w-6 h-6"></lucide-angular>
             </div>
           </div>
           <div class="mt-4 flex items-center text-sm">
@@ -60,18 +69,10 @@ import { UserActivityChart } from './ui/user-activity-chart';
                   : 'text-rose-600 dark:text-rose-400')
               "
             >
-              <svg class="w-4 h-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  [attr.d]="
-                    stat.trend > 0
-                      ? 'M13 7h8m0 0v8m0-8l-8 8-4-4-6 6'
-                      : 'M13 17h8m0 0V9m0 8l-8-8-4 4-6-6'
-                  "
-                />
-              </svg>
+              <lucide-angular
+                [img]="stat.trend > 0 ? TrendingUp : TrendingDown"
+                class="w-4 h-4 mr-1"
+              ></lucide-angular>
               {{ stat.trend > 0 ? '+' : '' }}{{ stat.trend }}%
             </span>
             <span class="text-slate-400 ml-2">vs last month</span>
@@ -154,33 +155,36 @@ import { UserActivityChart } from './ui/user-activity-chart';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DashboardPage {
+  readonly TrendingUp = TrendingUp;
+  readonly TrendingDown = TrendingDown;
+
   stats = [
     {
       label: 'Total Users',
       value: '12,345',
       trend: 12,
-      icon: '👥',
+      icon: Users,
       colorClass: 'bg-blue-100 text-blue-600',
     },
     {
       label: 'Total Revenue',
       value: '$45,678',
       trend: 8,
-      icon: '💰',
+      icon: DollarSign,
       colorClass: 'bg-green-100 text-green-600',
     },
     {
       label: 'Active Sessions',
       value: '1,234',
       trend: -3,
-      icon: '⚡',
+      icon: Zap,
       colorClass: 'bg-yellow-100 text-yellow-600',
     },
     {
       label: 'Support Tickets',
       value: '56',
       trend: 2,
-      icon: '🎫',
+      icon: Ticket,
       colorClass: 'bg-purple-100 text-purple-600',
     },
   ];

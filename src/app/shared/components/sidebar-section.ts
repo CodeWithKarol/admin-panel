@@ -1,23 +1,17 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink, RouterLinkActive } from '@angular/router';
+import { LucideAngularModule, Zap, LayoutGrid, Users } from 'lucide-angular';
 
 @Component({
   selector: 'app-sidebar',
-  imports: [CommonModule, RouterLink, RouterLinkActive],
+  imports: [CommonModule, RouterLink, RouterLinkActive, LucideAngularModule],
   template: `
     <div class="h-full flex flex-col bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300">
       <!-- Logo Area -->
       <div class="h-16 flex items-center px-6 border-b border-slate-100 dark:border-slate-700">
         <div class="flex items-center gap-2 text-indigo-600 dark:text-indigo-400">
-          <svg class="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M13 10V3L4 14h7v7l9-11h-7z"
-            />
-          </svg>
+          <lucide-angular [img]="Zap" class="w-8 h-8"></lucide-angular>
           <span class="text-xl font-bold tracking-tight text-slate-900 dark:text-white"
             >Admin<span class="text-indigo-600 dark:text-indigo-400">Panel</span></span
           >
@@ -36,19 +30,10 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
           [routerLinkActiveOptions]="{ exact: true }"
           class="group flex items-center px-3 py-2.5 text-sm font-medium rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors"
         >
-          <svg
+          <lucide-angular
+            [img]="LayoutGrid"
             class="w-5 h-5 mr-3 text-slate-400 group-hover:text-indigo-500 group-[.active]:text-indigo-500 transition-colors"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"
-            />
-          </svg>
+          ></lucide-angular>
           Dashboard
         </a>
 
@@ -61,19 +46,10 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
           routerLinkActive="bg-indigo-50 text-indigo-600 dark:bg-indigo-900/20 dark:text-indigo-400"
           class="group flex items-center px-3 py-2.5 text-sm font-medium rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors"
         >
-          <svg
+          <lucide-angular
+            [img]="Users"
             class="w-5 h-5 mr-3 text-slate-400 group-hover:text-indigo-500 group-[.active]:text-indigo-500 transition-colors"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"
-            />
-          </svg>
+          ></lucide-angular>
           Users
         </a>
       </nav>
@@ -97,4 +73,8 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
   styles: [],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SidebarSection {}
+export class SidebarSection {
+  readonly Zap = Zap;
+  readonly LayoutGrid = LayoutGrid;
+  readonly Users = Users;
+}
