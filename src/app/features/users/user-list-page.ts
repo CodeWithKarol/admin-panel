@@ -18,7 +18,7 @@ import { LucideAngularModule, ChevronDown } from 'lucide-angular';
         <h2 class="text-2xl font-bold text-gray-800 dark:text-white">Users</h2>
         <a
           routerLink="new"
-          class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition-colors shadow-sm"
+          class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 transition-colors"
         >
           Add User
         </a>

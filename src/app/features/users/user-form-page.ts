@@ -78,25 +78,28 @@ import { LucideAngularModule, ChevronDown } from 'lucide-angular';
             </div>
           </div>
 
-          <div class="flex items-center">
-            <input
-              type="checkbox"
-              id="active"
-              formControlName="active"
-              class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600 dark:bg-slate-700 dark:border-slate-600"
-            />
-            <label
-              for="active"
-              class="ml-2 block text-sm text-gray-900 dark:text-slate-300 transition-colors"
-              >Active</label
-            >
+          <div class="relative flex items-start">
+            <div class="flex h-6 items-center">
+              <input
+                id="active"
+                formControlName="active"
+                type="checkbox"
+                class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600 dark:bg-slate-700 dark:border-slate-600 dark:ring-offset-slate-800"
+              />
+            </div>
+            <div class="ml-3 text-sm leading-6">
+              <label for="active" class="font-medium text-gray-900 dark:text-slate-300"
+                >Active</label
+              >
+              <p class="text-gray-500 dark:text-slate-400">Enable or disable this user account.</p>
+            </div>
           </div>
 
           <div class="flex justify-end pt-4">
             <button
               type="submit"
               [disabled]="userForm.invalid || isSaving()"
-              class="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50"
+              class="ml-3 inline-flex justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:opacity-50"
             >
               {{ isSaving() ? 'Saving...' : 'Save User' }}
             </button>
