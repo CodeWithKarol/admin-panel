@@ -35,7 +35,7 @@ import { User } from '../../core/models/user';
               </h3>
               <div class="mt-2">
                 <p class="text-sm text-gray-500">
-                  Are you sure you want to delete <strong>{{ user()?.name }}</strong
+                  Are you sure you want to delete <strong>{{ user().name }}</strong
                   >? This action cannot be undone.
                 </p>
               </div>
