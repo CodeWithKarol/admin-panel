@@ -15,11 +15,6 @@ import { LucideAngularModule, ChevronDown } from 'lucide-angular';
         <h2 class="text-2xl font-bold text-gray-800 dark:text-white">
           {{ isEditMode() ? 'Edit User' : 'New User' }}
         </h2>
-        <a
-          routerLink="/users"
-          class="text-gray-600 hover:text-gray-900 dark:text-slate-400 dark:hover:text-white transition-colors"
-          >Cancel</a
-        >
       </div>
 
       <div
@@ -95,11 +90,17 @@ import { LucideAngularModule, ChevronDown } from 'lucide-angular';
             </div>
           </div>
 
-          <div class="flex justify-end pt-4">
+          <div class="flex justify-end pt-4 gap-3">
+            <a
+              routerLink="/users"
+              class="rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 dark:bg-slate-800 dark:text-slate-200 dark:ring-slate-700 dark:hover:bg-slate-700"
+            >
+              Cancel
+            </a>
             <button
               type="submit"
               [disabled]="userForm.invalid || isSaving()"
-              class="ml-3 inline-flex justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:opacity-50"
+              class="inline-flex justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:opacity-50"
             >
               {{ isSaving() ? 'Saving...' : 'Save User' }}
             </button>
