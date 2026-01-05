@@ -1,9 +1,11 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RevenueChart } from './ui/revenue-chart';
+import { UserActivityChart } from './ui/user-activity-chart';
 
 @Component({
   selector: 'app-dashboard',
-  imports: [CommonModule],
+  imports: [CommonModule, RevenueChart, UserActivityChart],
   template: `
     <div class="space-y-6">
       <h2 class="text-2xl font-bold text-gray-800">Dashboard</h2>
@@ -34,18 +36,8 @@ import { CommonModule } from '@angular/common';
 
       <!-- Charts Section -->
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
-          <h3 class="text-lg font-medium text-gray-900 mb-4">Revenue Overview</h3>
-          <div class="h-64 bg-gray-50 flex items-center justify-center rounded">
-            <span class="text-gray-400">Chart Placeholder (Revenue)</span>
-          </div>
-        </div>
-        <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
-          <h3 class="text-lg font-medium text-gray-900 mb-4">User Activity</h3>
-          <div class="h-64 bg-gray-50 flex items-center justify-center rounded">
-            <span class="text-gray-400">Chart Placeholder (Activity)</span>
-          </div>
-        </div>
+        <app-revenue-chart></app-revenue-chart>
+        <app-user-activity-chart></app-user-activity-chart>
       </div>
     </div>
   `,
