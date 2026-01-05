@@ -4,10 +4,11 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { UserService } from '../../core/services/user-service';
 import { User } from '../../core/models/user';
+import { LucideAngularModule, ChevronDown } from 'lucide-angular';
 
 @Component({
   selector: 'app-user-form',
-  imports: [CommonModule, ReactiveFormsModule, RouterLink],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink, LucideAngularModule],
   template: `
     <div class="max-w-2xl mx-auto">
       <div class="flex items-center justify-between mb-6">
@@ -59,15 +60,22 @@ import { User } from '../../core/models/user';
             <label for="role" class="block text-sm font-medium text-gray-700 dark:text-slate-300"
               >Role</label
             >
-            <select
-              id="role"
-              formControlName="role"
-              class="block w-full rounded-md border border-gray-300 px-3 py-2.5 text-gray-900 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm dark:bg-slate-700 dark:border-slate-600 dark:text-white transition-colors"
-            >
-              <option value="user">User</option>
-              <option value="admin">Admin</option>
-              <option value="editor">Editor</option>
-            </select>
+            <div class="relative">
+              <select
+                id="role"
+                formControlName="role"
+                class="block w-full appearance-none rounded-md border border-gray-300 py-2.5 pl-3 pr-10 text-gray-900 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm dark:bg-slate-700 dark:border-slate-600 dark:text-white transition-colors"
+              >
+                <option value="user">User</option>
+                <option value="admin">Admin</option>
+                <option value="editor">Editor</option>
+              </select>
+              <div
+                class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-500 dark:text-slate-400"
+              >
+                <lucide-angular [img]="ChevronDown" class="h-4 w-4"></lucide-angular>
+              </div>
+            </div>
           </div>
 
           <div class="flex items-center">
@@ -101,6 +109,7 @@ import { User } from '../../core/models/user';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UserFormPage implements OnInit {
+  readonly ChevronDown = ChevronDown;
   private fb = inject(FormBuilder);
   private userService = inject(UserService);
   private router = inject(Router);

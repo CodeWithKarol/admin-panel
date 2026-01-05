@@ -7,10 +7,11 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { debounceTime, distinctUntilChanged } from 'rxjs';
 import { DeleteUserDialog } from './delete-user-dialog';
 import { User } from '../../core/models/user';
+import { LucideAngularModule, ChevronDown } from 'lucide-angular';
 
 @Component({
   selector: 'app-user-list',
-  imports: [CommonModule, RouterLink, ReactiveFormsModule, DeleteUserDialog],
+  imports: [CommonModule, RouterLink, ReactiveFormsModule, DeleteUserDialog, LucideAngularModule],
   template: `
     <div class="space-y-6">
       <div class="flex items-center justify-between">
@@ -35,15 +36,22 @@ import { User } from '../../core/models/user';
             class="block w-full rounded-md border border-gray-300 px-3 py-2.5 text-gray-900 shadow-sm placeholder:text-gray-400 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm dark:bg-slate-700 dark:border-slate-600 dark:text-white dark:placeholder-slate-400 transition-colors"
           />
         </div>
-        <select
-          [formControl]="roleControl"
-          class="block rounded-md border border-gray-300 px-3 py-2.5 text-gray-900 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm dark:bg-slate-700 dark:border-slate-600 dark:text-white transition-colors"
-        >
-          <option value="">All Roles</option>
-          <option value="admin">Admin</option>
-          <option value="user">User</option>
-          <option value="editor">Editor</option>
-        </select>
+        <div class="relative">
+          <select
+            [formControl]="roleControl"
+            class="block w-full appearance-none rounded-md border border-gray-300 py-2.5 pl-3 pr-10 text-gray-900 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm dark:bg-slate-700 dark:border-slate-600 dark:text-white transition-colors"
+          >
+            <option value="">All Roles</option>
+            <option value="admin">Admin</option>
+            <option value="user">User</option>
+            <option value="editor">Editor</option>
+          </select>
+          <div
+            class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-500 dark:text-slate-400"
+          >
+            <lucide-angular [img]="ChevronDown" class="h-4 w-4"></lucide-angular>
+          </div>
+        </div>
       </div>
 
       <!-- Table -->
@@ -146,6 +154,7 @@ import { User } from '../../core/models/user';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UserListPage {
+  readonly ChevronDown = ChevronDown;
   private userService = inject(UserService);
 
   // Signals
