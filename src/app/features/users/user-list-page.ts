@@ -5,10 +5,12 @@ import { UserService } from '../../core/services/user-service';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { debounceTime, distinctUntilChanged } from 'rxjs';
+import { DeleteUserDialog } from './delete-user-dialog';
+import { User } from '../../core/models/user';
 
 @Component({
   selector: 'app-user-list',
-  imports: [CommonModule, RouterLink, ReactiveFormsModule],
+  imports: [CommonModule, RouterLink, ReactiveFormsModule, DeleteUserDialog],
   template: `
     <div class="space-y-6">
       <div class="flex items-center justify-between">
@@ -102,7 +104,7 @@ import { debounceTime, distinctUntilChanged } from 'rxjs';
                 <a [routerLink]="[user.id]" class="text-indigo-600 hover:text-indigo-900 mr-4"
                   >Edit</a
                 >
-                <button (click)="deleteUser(user.id)" class="text-red-600 hover:text-red-900">
+                <button (click)="initDeleteUser(user)" class="text-red-600 hover:text-red-900">
                   Delete
                 </button>
               </td>
@@ -115,6 +117,14 @@ import { debounceTime, distinctUntilChanged } from 'rxjs';
           </tbody>
         </table>
       </div>
+
+      @if (userToDelete()) {
+      <app-delete-user-dialog
+        [user]="userToDelete()!"
+        (confirm)="confirmDelete()"
+        (cancel)="cancelDelete()"
+      />
+      }
     </div>
   `,
   styles: [],
@@ -124,7 +134,7 @@ export class UserListPage {
   private userService = inject(UserService);
 
   // Signals
-  users = toSignal(this.userService.getUsers(), { initialValue: [] });
+  users = this.userService.users;
 
   // Form Controls for filtering
   searchControl = new FormControl('');
@@ -136,6 +146,9 @@ export class UserListPage {
     { initialValue: '' }
   );
   roleFilter = toSignal(this.roleControl.valueChanges, { initialValue: '' });
+
+  // Dialog state
+  userToDelete = signal<User | null>(null);
 
   // Computed filtered users
   filteredUsers = computed(() => {
@@ -151,14 +164,19 @@ export class UserListPage {
     });
   });
 
-  deleteUser(id: number) {
-    if (confirm('Are you sure you want to delete this user?')) {
-      this.userService.deleteUser(id).subscribe(() => {
-        // In a real app, we would refresh the list or update the signal
-        // For this mock, we might need to manually trigger a refresh or update local state
-        // Since toSignal is read-only from observable, we'd typically use a service with a signal source
-        // But for simplicity here, we'll just reload the page or assume the service updates a subject
-        window.location.reload(); // Simple hack for this mock
+  initDeleteUser(user: User) {
+    this.userToDelete.set(user);
+  }
+
+  cancelDelete() {
+    this.userToDelete.set(null);
+  }
+
+  confirmDelete() {
+    const user = this.userToDelete();
+    if (user) {
+      this.userService.deleteUser(user.id).subscribe(() => {
+        this.userToDelete.set(null);
       });
     }
   }

@@ -6,7 +6,7 @@ import { of, delay, Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class UserService {
-  private mockUsers: User[] = [
+  private _users = signal<User[]>([
     {
       id: 1,
       name: 'Admin User',
@@ -47,30 +47,32 @@ export class UserService {
       active: true,
       lastLogin: new Date('2023-01-05'),
     },
-  ];
+  ]);
+
+  users = this._users.asReadonly();
 
   getUsers(): Observable<User[]> {
-    return of([...this.mockUsers]).pipe(delay(500));
+    return of(this._users()).pipe(delay(500));
   }
 
   getUserById(id: number): Observable<User | undefined> {
-    const user = this.mockUsers.find((u) => u.id === id);
+    const user = this._users().find((u) => u.id === id);
     return of(user).pipe(delay(300));
   }
 
   addUser(user: Omit<User, 'id'>): Observable<User> {
-    const newUser = { ...user, id: this.mockUsers.length + 1 };
-    this.mockUsers = [...this.mockUsers, newUser];
+    const newUser = { ...user, id: this._users().length + 1 };
+    this._users.update((users) => [...users, newUser]);
     return of(newUser).pipe(delay(500));
   }
 
   updateUser(user: User): Observable<User> {
-    this.mockUsers = this.mockUsers.map((u) => (u.id === user.id ? user : u));
+    this._users.update((users) => users.map((u) => (u.id === user.id ? user : u)));
     return of(user).pipe(delay(500));
   }
 
   deleteUser(id: number): Observable<boolean> {
-    this.mockUsers = this.mockUsers.filter((u) => u.id !== id);
+    this._users.update((users) => users.filter((u) => u.id !== id));
     return of(true).pipe(delay(500));
   }
 }
