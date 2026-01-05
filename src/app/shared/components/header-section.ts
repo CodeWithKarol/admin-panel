@@ -2,7 +2,18 @@ import { Component, ChangeDetectionStrategy, inject, signal } from '@angular/cor
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../core/services/auth-service';
 import { LayoutService } from '../../core/services/layout-service';
-import { LucideAngularModule, Menu, Search, Sun, Moon, Bell } from 'lucide-angular';
+import {
+  LucideAngularModule,
+  Menu,
+  Search,
+  Sun,
+  Moon,
+  Bell,
+  LogOut,
+  User,
+  Settings,
+  ChevronDown,
+} from 'lucide-angular';
 
 @Component({
   selector: 'app-header',
@@ -107,24 +118,66 @@ import { LucideAngularModule, Menu, Search, Sun, Moon, Bell } from 'lucide-angul
         </div>
 
         <!-- Profile Dropdown -->
-        <div class="flex items-center gap-3 pl-6 border-l border-slate-200 dark:border-slate-700">
-          <div class="hidden md:block text-right">
-            <p class="text-sm font-semibold text-slate-700 dark:text-slate-200">
-              {{ authService.currentUser()?.name }}
-            </p>
-            <p class="text-xs text-slate-500 dark:text-slate-400">Administrator</p>
+        <div class="relative pl-6 border-l border-slate-200 dark:border-slate-700">
+          <button
+            (click)="toggleProfileMenu()"
+            class="flex items-center gap-3 hover:bg-slate-50 dark:hover:bg-slate-700/50 p-1.5 rounded-lg transition-colors"
+          >
+            <div class="hidden md:block text-right">
+              <p class="text-sm font-semibold text-slate-700 dark:text-slate-200">
+                {{ authService.currentUser()?.name }}
+              </p>
+              <p class="text-xs text-slate-500 dark:text-slate-400">Administrator</p>
+            </div>
+            <div
+              class="w-9 h-9 rounded-full bg-indigo-100 dark:bg-indigo-900 flex items-center justify-center text-indigo-700 dark:text-indigo-300 font-bold ring-2 ring-transparent group-hover:ring-indigo-500 transition-all"
+            >
+              {{ authService.currentUser()?.name?.charAt(0) }}
+            </div>
+            <lucide-angular
+              [img]="ChevronDown"
+              class="w-4 h-4 text-slate-400 hidden md:block"
+            ></lucide-angular>
+          </button>
+
+          @if (showProfileMenu()) {
+          <div class="fixed inset-0 z-40 cursor-pointer" (click)="showProfileMenu.set(false)"></div>
+          <div
+            class="absolute right-0 mt-2 w-48 bg-white dark:bg-slate-800 rounded-lg shadow-lg border border-slate-200 dark:border-slate-700 py-1 z-50"
+          >
+            <div class="px-4 py-2 border-b border-slate-100 dark:border-slate-700 md:hidden">
+              <p class="text-sm font-semibold text-slate-900 dark:text-white">
+                {{ authService.currentUser()?.name }}
+              </p>
+              <p class="text-xs text-slate-500 dark:text-slate-400">Administrator</p>
+            </div>
+
+            <a
+              href="javascript:void(0)"
+              class="flex items-center px-4 py-2 text-sm text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors"
+            >
+              <lucide-angular [img]="User" class="w-4 h-4 mr-2"></lucide-angular>
+              Profile
+            </a>
+            <a
+              href="javascript:void(0)"
+              class="flex items-center px-4 py-2 text-sm text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors"
+            >
+              <lucide-angular [img]="Settings" class="w-4 h-4 mr-2"></lucide-angular>
+              Settings
+            </a>
+
+            <div class="border-t border-slate-100 dark:border-slate-700 my-1"></div>
+
+            <button
+              (click)="logout()"
+              class="w-full flex items-center px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
+            >
+              <lucide-angular [img]="LogOut" class="w-4 h-4 mr-2"></lucide-angular>
+              Sign out
+            </button>
           </div>
-          <button
-            class="w-9 h-9 rounded-full bg-indigo-100 dark:bg-indigo-900 flex items-center justify-center text-indigo-700 dark:text-indigo-300 font-bold ring-2 ring-transparent hover:ring-indigo-500 transition-all"
-          >
-            {{ authService.currentUser()?.name?.charAt(0) }}
-          </button>
-          <button
-            (click)="logout()"
-            class="hidden md:block text-xs font-medium text-slate-500 hover:text-red-600 transition-colors"
-          >
-            Sign out
-          </button>
+          }
         </div>
       </div>
     </header>
@@ -137,12 +190,17 @@ export class HeaderSection {
   layoutService = inject(LayoutService);
 
   showNotifications = signal(false);
+  showProfileMenu = signal(false);
 
   readonly Menu = Menu;
   readonly Search = Search;
   readonly Sun = Sun;
   readonly Moon = Moon;
   readonly Bell = Bell;
+  readonly LogOut = LogOut;
+  readonly User = User;
+  readonly Settings = Settings;
+  readonly ChevronDown = ChevronDown;
 
   logout() {
     this.authService.logout();
@@ -158,5 +216,9 @@ export class HeaderSection {
 
   toggleNotifications() {
     this.showNotifications.update((v) => !v);
+  }
+
+  toggleProfileMenu() {
+    this.showProfileMenu.update((v) => !v);
   }
 }
