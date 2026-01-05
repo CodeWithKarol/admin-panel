@@ -120,7 +120,7 @@ import { debounceTime, distinctUntilChanged } from 'rxjs';
   styles: [],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class UserListComponent {
+export class UserList {
   private userService = inject(UserService);
 
   // Signals

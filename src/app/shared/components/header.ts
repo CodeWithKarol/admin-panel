@@ -22,7 +22,7 @@ import { RouterLink } from '@angular/router';
   styles: [],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class HeaderComponent {
+export class Header {
   authService = inject(AuthService);
 
   logout() {

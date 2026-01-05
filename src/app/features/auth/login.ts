@@ -63,7 +63,7 @@ import { Router } from '@angular/router';
   styles: [],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class LoginComponent {
+export class Login {
   private fb = inject(FormBuilder);
   private authService = inject(AuthService);
 

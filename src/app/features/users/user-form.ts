@@ -84,7 +84,7 @@ import { User } from '../../core/models/user.model';
   styles: [],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class UserFormComponent implements OnInit {
+export class UserForm implements OnInit {
   private fb = inject(FormBuilder);
   private userService = inject(UserService);
   private router = inject(Router);

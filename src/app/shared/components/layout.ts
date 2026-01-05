@@ -1,12 +1,12 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
-import { HeaderComponent } from './header.component';
-import { SidebarComponent } from './sidebar.component';
+import { Header } from './header';
+import { Sidebar } from './sidebar';
 
 @Component({
   selector: 'app-layout',
-  imports: [CommonModule, RouterOutlet, HeaderComponent, SidebarComponent],
+  imports: [CommonModule, RouterOutlet, Header, Sidebar],
   template: `
     <div class="flex h-screen bg-gray-100">
       <app-sidebar class="hidden md:block" />
@@ -21,4 +21,4 @@ import { SidebarComponent } from './sidebar.component';
   styles: [],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class LayoutComponent {}
+export class Layout {}
