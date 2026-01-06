@@ -13,7 +13,7 @@ describe('UserListPage', () => {
   beforeEach(async () => {
     userServiceMock = {
       users: signal([]),
-      deleteUser: jasmine.createSpy('deleteUser').and.returnValue(of(undefined)),
+      deleteUser: vi.fn().mockReturnValue(of(undefined)),
     };
 
     await TestBed.configureTestingModule({
@@ -24,7 +24,7 @@ describe('UserListPage', () => {
       ],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(UserListPageComponent);
+    fixture = TestBed.createComponent(UserListPage);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

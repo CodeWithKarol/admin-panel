@@ -12,17 +12,20 @@ describe('UserFormPage', () => {
 
   beforeEach(async () => {
     userServiceMock = {
-      getUserById: jasmine.createSpy('getUserById').and.returnValue(of(null)),
-      addUser: jasmine.createSpy('addUser').and.returnValue(of(undefined)),
-      updateUser: jasmine.createSpy('updateUser').and.returnValue(of(undefined)),
+      getUserById: vi.fn().mockReturnValue(of(null)),
+      addUser: vi.fn().mockReturnValue(of(undefined)),
+      updateUser: vi.fn().mockReturnValue(of(undefined)),
     };
 
     routerMock = {
-      navigate: jasmine.createSpy('navigate'),
+      navigate: vi.fn(),
+      createUrlTree: vi.fn(),
+      serializeUrl: vi.fn(),
+      events: of(undefined),
     };
 
     await TestBed.configureTestingModule({
-      imports: [UserFormPageComponent],
+      imports: [UserFormPage],
       providers: [
         { provide: UserService, useValue: userServiceMock },
         { provide: Router, useValue: routerMock },
@@ -39,7 +42,7 @@ describe('UserFormPage', () => {
       ],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(UserFormPageComponent);
+    fixture = TestBed.createComponent(UserFormPage);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
