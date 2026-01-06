@@ -1,16 +1,15 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { MainLayout } from './main-layout';
 import { ActivatedRoute } from '@angular/router';
 import { of } from 'rxjs';
 
 describe('MainLayout', () => {
   let component: MainLayout;
-  let fixture: ComponentFixture<MainLayout>;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [MainLayout],
+  beforeEach(() => {
+    TestBed.configureTestingModule({
       providers: [
+        MainLayout,
         {
           provide: ActivatedRoute,
           useValue: {
@@ -18,11 +17,9 @@ describe('MainLayout', () => {
           },
         },
       ],
-    }).compileComponents();
+    });
 
-    fixture = TestBed.createComponent(MainLayout);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+    component = TestBed.runInInjectionContext(() => new MainLayout());
   });
 
   it('should create', () => {

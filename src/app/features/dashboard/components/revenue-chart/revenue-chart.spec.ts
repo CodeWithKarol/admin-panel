@@ -1,18 +1,15 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { RevenueChart } from './revenue-chart';
 
 describe('RevenueChart', () => {
   let component: RevenueChart;
-  let fixture: ComponentFixture<RevenueChart>;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [RevenueChart],
-    }).compileComponents();
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      providers: [RevenueChart],
+    });
 
-    fixture = TestBed.createComponent(RevenueChart);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+    component = TestBed.runInInjectionContext(() => new RevenueChart());
   });
 
   it('should create', () => {

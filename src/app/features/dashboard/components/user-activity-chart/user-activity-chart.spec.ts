@@ -1,18 +1,15 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { UserActivityChart } from './user-activity-chart';
 
 describe('UserActivityChart', () => {
   let component: UserActivityChart;
-  let fixture: ComponentFixture<UserActivityChart>;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [UserActivityChart],
-    }).compileComponents();
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      providers: [UserActivityChart],
+    });
 
-    fixture = TestBed.createComponent(UserActivityChart);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+    component = TestBed.runInInjectionContext(() => new UserActivityChart());
   });
 
   it('should create', () => {
