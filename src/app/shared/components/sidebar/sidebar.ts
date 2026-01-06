@@ -11,7 +11,7 @@ import { LayoutService } from '../../../core/services/layout-service';
   styleUrl: './sidebar.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SidebarComponent {
+export class Sidebar {
   private layoutService = inject(LayoutService);
   readonly Zap = Zap;
   readonly LayoutGrid = LayoutGrid;

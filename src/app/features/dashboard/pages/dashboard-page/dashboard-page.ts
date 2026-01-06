@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RevenueChartComponent } from '../../components/revenue-chart/revenue-chart';
-import { UserActivityChartComponent } from '../../components/user-activity-chart/user-activity-chart';
+import { RevenueChart } from '../../components/revenue-chart/revenue-chart';
+import { UserActivityChart } from '../../components/user-activity-chart/user-activity-chart';
 import {
   LucideAngularModule,
   Users,
@@ -14,7 +14,7 @@ import {
 
 @Component({
   selector: 'app-dashboard',
-  imports: [CommonModule, RevenueChartComponent, UserActivityChartComponent, LucideAngularModule],
+  imports: [CommonModule, RevenueChart, UserActivityChart, LucideAngularModule],
   templateUrl: './dashboard-page.html',
   styleUrl: './dashboard-page.css',
   changeDetection: ChangeDetectionStrategy.OnPush,

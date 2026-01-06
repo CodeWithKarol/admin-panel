@@ -11,7 +11,7 @@ import { LucideAngularModule, MoreVertical } from 'lucide-angular';
   styleUrl: './user-activity-chart.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class UserActivityChartComponent {
+export class UserActivityChart {
   readonly MoreVertical = MoreVertical;
 
   public barChartData: ChartConfiguration<'bar'>['data'] = {

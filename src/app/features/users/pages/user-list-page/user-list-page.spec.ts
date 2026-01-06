@@ -1,13 +1,13 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { UserListPageComponent } from './user-list-page.component';
+import { UserListPage } from './user-list-page';
 import { UserService } from '../../services/user.service';
 import { of } from 'rxjs';
 import { signal } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
-describe('UserListPageComponent', () => {
-  let component: UserListPageComponent;
-  let fixture: ComponentFixture<UserListPageComponent>;
+describe('UserListPage', () => {
+  let component: UserListPage;
+  let fixture: ComponentFixture<UserListPage>;
   let userServiceMock: any;
 
   beforeEach(async () => {
@@ -17,7 +17,7 @@ describe('UserListPageComponent', () => {
     };
 
     await TestBed.configureTestingModule({
-      imports: [UserListPageComponent],
+      imports: [UserListPage],
       providers: [
         { provide: UserService, useValue: userServiceMock },
         { provide: ActivatedRoute, useValue: {} },

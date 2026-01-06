@@ -5,25 +5,19 @@ import { UserService } from '../../services/user.service';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { debounceTime, distinctUntilChanged } from 'rxjs';
-import { DeleteUserDialogComponent } from '../../components/delete-user-dialog/delete-user-dialog.component';
+import { DeleteUserDialog } from '../../components/delete-user-dialog/delete-user-dialog';
 import { User } from '../../../../core/models/user';
 import { LucideAngularModule, ChevronDown, Pencil, Trash2 } from 'lucide-angular';
 
 @Component({
   selector: 'app-user-list-page',
   standalone: true,
-  imports: [
-    CommonModule,
-    RouterLink,
-    ReactiveFormsModule,
-    DeleteUserDialogComponent,
-    LucideAngularModule,
-  ],
-  templateUrl: './user-list-page.component.html',
-  styleUrl: './user-list-page.component.css',
+  imports: [CommonModule, RouterLink, ReactiveFormsModule, DeleteUserDialog, LucideAngularModule],
+  templateUrl: './user-list-page.html',
+  styleUrl: './user-list-page.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class UserListPageComponent {
+export class UserListPage {
   readonly ChevronDown = ChevronDown;
   private userService = inject(UserService);
 

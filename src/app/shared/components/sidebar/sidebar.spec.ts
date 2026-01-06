@@ -1,15 +1,15 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { SidebarComponent } from './sidebar';
+import { Sidebar } from './sidebar';
 import { ActivatedRoute } from '@angular/router';
 import { of } from 'rxjs';
 
-describe('SidebarComponent', () => {
-  let component: SidebarComponent;
-  let fixture: ComponentFixture<SidebarComponent>;
+describe('Sidebar', () => {
+  let component: Sidebar;
+  let fixture: ComponentFixture<Sidebar>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [SidebarComponent],
+      imports: [Sidebar],
       providers: [
         {
           provide: ActivatedRoute,

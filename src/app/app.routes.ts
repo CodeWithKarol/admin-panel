@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './core/guards/auth-guard';
-import { MainLayoutComponent } from './shared/components/layout/main-layout';
+import { MainLayout } from './shared/components/layout/main-layout';
 
 export const routes: Routes = [
   {
@@ -10,7 +10,7 @@ export const routes: Routes = [
   },
   {
     path: '',
-    component: MainLayoutComponent,
+    component: MainLayout,
     canActivate: [authGuard],
     children: [
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
@@ -24,22 +24,22 @@ export const routes: Routes = [
       {
         path: 'users',
         loadComponent: () =>
-          import('./features/users/pages/user-list-page/user-list-page.component').then(
-            (m) => m.UserListPageComponent
+          import('./features/users/pages/user-list-page/user-list-page').then(
+            (m) => m.UserListPage
           ),
       },
       {
         path: 'users/new',
         loadComponent: () =>
-          import('./features/users/pages/user-form-page/user-form-page.component').then(
-            (m) => m.UserFormPageComponent
+          import('./features/users/pages/user-form-page/user-form-page').then(
+            (m) => m.UserFormPage
           ),
       },
       {
         path: 'users/:id',
         loadComponent: () =>
-          import('./features/users/pages/user-form-page/user-form-page.component').then(
-            (m) => m.UserFormPageComponent
+          import('./features/users/pages/user-form-page/user-form-page').then(
+            (m) => m.UserFormPage
           ),
       },
     ],

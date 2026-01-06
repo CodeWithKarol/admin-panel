@@ -9,7 +9,7 @@ import { User } from '../../../../core/models/user';
   templateUrl: './delete-user-dialog.html',
   styleUrl: './delete-user-dialog.css',
 })
-export class DeleteUserDialogComponent {
+export class DeleteUserDialog {
   user = input.required<User>();
   confirm = output<void>();
   cancel = output<void>();

@@ -11,7 +11,7 @@ import { LucideAngularModule, MoreVertical } from 'lucide-angular';
   styleUrl: './revenue-chart.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class RevenueChartComponent {
+export class RevenueChart {
   readonly MoreVertical = MoreVertical;
 
   public lineChartData: ChartConfiguration<'line'>['data'] = {

@@ -1,15 +1,15 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { MainLayoutComponent } from './main-layout';
+import { MainLayout } from './main-layout';
 import { ActivatedRoute } from '@angular/router';
 import { of } from 'rxjs';
 
-describe('MainLayoutComponent', () => {
-  let component: MainLayoutComponent;
-  let fixture: ComponentFixture<MainLayoutComponent>;
+describe('MainLayout', () => {
+  let component: MainLayout;
+  let fixture: ComponentFixture<MainLayout>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [MainLayoutComponent],
+      imports: [MainLayout],
       providers: [
         {
           provide: ActivatedRoute,

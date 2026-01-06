@@ -9,11 +9,11 @@ import { LucideAngularModule, ChevronDown } from 'lucide-angular';
   selector: 'app-user-form-page',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, RouterLink, LucideAngularModule],
-  templateUrl: './user-form-page.component.html',
-  styleUrl: './user-form-page.component.css',
+  templateUrl: './user-form-page.html',
+  styleUrl: './user-form-page.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class UserFormPageComponent implements OnInit {
+export class UserFormPage implements OnInit {
   readonly ChevronDown = ChevronDown;
   private fb = inject(FormBuilder);
   private userService = inject(UserService);

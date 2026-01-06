@@ -1,12 +1,12 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { UserFormPageComponent } from './user-form-page.component';
+import { UserFormPage } from './user-form-page';
 import { UserService } from '../../services/user.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { of } from 'rxjs';
 
-describe('UserFormPageComponent', () => {
-  let component: UserFormPageComponent;
-  let fixture: ComponentFixture<UserFormPageComponent>;
+describe('UserFormPage', () => {
+  let component: UserFormPage;
+  let fixture: ComponentFixture<UserFormPage>;
   let userServiceMock: any;
   let routerMock: any;
 

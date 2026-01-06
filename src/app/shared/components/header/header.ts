@@ -22,7 +22,7 @@ import {
   styleUrl: './header.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class HeaderComponent {
+export class Header {
   authService = inject(AuthService);
   layoutService = inject(LayoutService);
 
