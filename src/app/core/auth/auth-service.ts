@@ -1,6 +1,6 @@
 import { Injectable, signal, computed, inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { LoginCredentials, AuthResponse } from '../models/auth';
+import { LoginCredentials, AuthResponse } from './auth.models';
 import { User } from '../models/user';
 import { of, delay, tap, Observable } from 'rxjs';
 

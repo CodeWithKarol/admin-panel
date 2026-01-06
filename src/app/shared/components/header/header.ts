@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { AuthService } from '../../../core/services/auth-service';
-import { LayoutService } from '../../../core/services/layout-service';
+import { AuthService } from '../../../core/auth/auth-service';
+import { LayoutService } from '../../../core/layout/layout-service';
 import {
   LucideAngularModule,
   Menu,

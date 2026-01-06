@@ -2,7 +2,7 @@ import { Component, ChangeDetectionStrategy, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { LucideAngularModule, Zap, LayoutGrid, Users } from 'lucide-angular';
-import { LayoutService } from '../../../core/services/layout-service';
+import { LayoutService } from '../../../core/layout/layout-service';
 
 @Component({
   selector: 'app-sidebar',

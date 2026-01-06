@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
 import { Header } from '../header/header';
 import { Sidebar } from '../sidebar/sidebar';
-import { LayoutService } from '../../../core/services/layout-service';
+import { LayoutService } from '../../../core/layout/layout-service';
 
 @Component({
   selector: 'app-layout',
