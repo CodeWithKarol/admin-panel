@@ -1,5 +1,5 @@
 import { Injectable, signal } from '@angular/core';
-import { User } from '../models/user';
+import { User } from '../../../core/models/user';
 import { of, delay, Observable } from 'rxjs';
 
 @Injectable({

@@ -7,30 +7,11 @@ import { LucideAngularModule, MoreVertical } from 'lucide-angular';
 @Component({
   selector: 'app-user-activity-chart',
   imports: [CommonModule, BaseChartDirective, LucideAngularModule],
-  template: `
-    <div
-      class="bg-white dark:bg-slate-800 p-6 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700 h-full"
-    >
-      <div class="flex items-center justify-between mb-6">
-        <div>
-          <h3 class="text-lg font-bold text-slate-900 dark:text-white">User Activity</h3>
-          <p class="text-sm text-slate-500 dark:text-slate-400">New vs Active users</p>
-        </div>
-        <button
-          class="p-2 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 dark:hover:bg-slate-700 rounded-lg transition-colors"
-        >
-          <lucide-angular [img]="MoreVertical" class="w-5 h-5"></lucide-angular>
-        </button>
-      </div>
-      <div class="h-72 w-full">
-        <canvas baseChart [data]="barChartData" [options]="barChartOptions" [type]="'bar'">
-        </canvas>
-      </div>
-    </div>
-  `,
+  templateUrl: './user-activity-chart.html',
+  styleUrl: './user-activity-chart.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class UserActivityChart {
+export class UserActivityChartComponent {
   readonly MoreVertical = MoreVertical;
 
   public barChartData: ChartConfiguration<'bar'>['data'] = {
