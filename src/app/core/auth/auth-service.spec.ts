@@ -3,7 +3,7 @@ import { TestBed } from '@angular/core/testing';
 import { BrowserTestingModule, platformBrowserTesting } from '@angular/platform-browser/testing';
 import { Router } from '@angular/router';
 import { AuthService } from './auth-service';
-import { User } from './auth.models';
+import { User } from '../models/user';
 import { describe, it, expect, beforeEach, afterEach, vi, beforeAll } from 'vitest';
 
 describe('AuthService', () => {
@@ -45,7 +45,13 @@ describe('AuthService', () => {
     });
 
     it('should initialize with user from localStorage if present', () => {
-      const user: User = { id: 1, username: 'testuser', email: 'test@example.com', role: 'admin' };
+      const user: User = {
+        id: 1,
+        name: 'testuser',
+        email: 'test@example.com',
+        role: 'admin',
+        active: true,
+      };
       localStorage.setItem('user', JSON.stringify(user));
 
       // Re-create service to trigger constructor
@@ -98,7 +104,13 @@ describe('AuthService', () => {
   describe('logout', () => {
     it('should clear user and navigate to login', () => {
       // Set initial state
-      const user: User = { id: 1, username: 'test', email: 'test@example.com', role: 'user' };
+      const user: User = {
+        id: 1,
+        name: 'test',
+        email: 'test@example.com',
+        role: 'user',
+        active: true,
+      };
       localStorage.setItem('user', JSON.stringify(user));
 
       // We need to set the internal signal.
