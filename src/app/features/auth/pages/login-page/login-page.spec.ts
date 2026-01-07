@@ -53,6 +53,7 @@ describe('LoginPage', () => {
     });
 
     it('should handle login error', () => {
+      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
       authServiceMock.login.mockReturnValue(throwError(() => new Error('Auth failed')));
 
       component.loginForm.setValue({
@@ -64,6 +65,9 @@ describe('LoginPage', () => {
 
       expect(authServiceMock.login).toHaveBeenCalled();
       expect(component.isLoading()).toBe(false); // Should be reset after error
+      expect(consoleSpy).toHaveBeenCalledWith('Login failed', expect.any(Error));
+
+      consoleSpy.mockRestore();
     });
   });
 });
