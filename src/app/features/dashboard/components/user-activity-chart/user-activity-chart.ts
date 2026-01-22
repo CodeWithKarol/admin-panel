@@ -1,12 +1,11 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { BaseChartDirective } from 'ng2-charts';
 import { ChartConfiguration, ChartOptions } from 'chart.js';
 import { LucideAngularModule, MoreVertical } from 'lucide-angular';
 
 @Component({
   selector: 'app-user-activity-chart',
-  imports: [CommonModule, BaseChartDirective, LucideAngularModule],
+  imports: [BaseChartDirective, LucideAngularModule],
   templateUrl: './user-activity-chart.html',
   styleUrl: './user-activity-chart.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -14,7 +13,7 @@ import { LucideAngularModule, MoreVertical } from 'lucide-angular';
 export class UserActivityChart {
   readonly MoreVertical = MoreVertical;
 
-  public barChartData: ChartConfiguration<'bar'>['data'] = {
+  protected readonly barChartData: ChartConfiguration<'bar'>['data'] = {
     labels: ['2018', '2019', '2020', '2021', '2022', '2023', '2024'],
     datasets: [
       {
@@ -29,7 +28,7 @@ export class UserActivityChart {
       },
     ],
   };
-  public barChartOptions: ChartOptions<'bar'> = {
+  protected readonly barChartOptions: ChartOptions<'bar'> = {
     responsive: true,
     maintainAspectRatio: false,
   };

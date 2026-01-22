@@ -1,26 +1,30 @@
-import { TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { UserFormPage } from './user-form-page';
 import { UserService } from '../../services/user.service';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, provideRouter } from '@angular/router';
 import { of, throwError } from 'rxjs';
+import { vi, describe, it, expect, beforeEach } from 'vitest';
 
 describe('UserFormPage', () => {
   let component: UserFormPage;
+  let fixture: ComponentFixture<UserFormPage>;
   let userServiceMock: any;
-  let routerMock: any;
+  let router: Router;
   let activatedRouteMock: any;
 
   // Helper to setup the component with specific route params
-  const setupComponent = (routeId: string | null) => {
+  const setupComponent = async (routeId: string | null, mockUser?: any) => {
     userServiceMock = {
       getUserById: vi.fn(),
       addUser: vi.fn(),
       updateUser: vi.fn(),
     };
 
-    routerMock = {
-      navigate: vi.fn(),
-    };
+    if (mockUser) {
+      userServiceMock.getUserById.mockReturnValue(of(mockUser));
+    } else {
+      userServiceMock.getUserById.mockReturnValue(of(undefined));
+    }
 
     activatedRouteMock = {
       snapshot: {
@@ -30,34 +34,37 @@ describe('UserFormPage', () => {
       },
     };
 
-    TestBed.configureTestingModule({
+    await TestBed.configureTestingModule({
+      imports: [UserFormPage],
       providers: [
-        UserFormPage,
+        provideRouter([]),
         { provide: UserService, useValue: userServiceMock },
-        { provide: Router, useValue: routerMock },
         { provide: ActivatedRoute, useValue: activatedRouteMock },
       ],
-    });
+    }).compileComponents();
 
-    component = TestBed.runInInjectionContext(() => new UserFormPage());
+    router = TestBed.inject(Router);
+    // Mock navigate to prevent actual navigation and allow tracking
+    vi.spyOn(router, 'navigate').mockImplementation(async () => true);
+
+    fixture = TestBed.createComponent(UserFormPage);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
   };
 
-  it('should create', () => {
-    setupComponent('new');
+  it('should create', async () => {
+    await setupComponent('new');
     expect(component).toBeTruthy();
   });
 
   describe('ngOnInit', () => {
-    it('should initialize in add mode when id is "new"', () => {
-      setupComponent('new');
-      component.ngOnInit();
-
+    it('should initialize in add mode when id is "new"', async () => {
+      await setupComponent('new');
       expect(component.isEditMode()).toBe(false);
       expect(userServiceMock.getUserById).not.toHaveBeenCalled();
     });
 
-    it('should initialize in edit mode and load user when id is provided', () => {
-      setupComponent('123');
+    it('should initialize in edit mode and load user when id is provided', async () => {
       const mockUser = {
         id: 123,
         name: 'John',
@@ -65,9 +72,8 @@ describe('UserFormPage', () => {
         role: 'admin',
         active: true,
       };
-      userServiceMock.getUserById.mockReturnValue(of(mockUser));
 
-      component.ngOnInit();
+      await setupComponent('123', mockUser);
 
       expect(component.isEditMode()).toBe(true);
       expect(component.userId()).toBe(123);
@@ -82,8 +88,8 @@ describe('UserFormPage', () => {
   });
 
   describe('onSubmit', () => {
-    it('should not submit if form is invalid', () => {
-      setupComponent('new');
+    it('should not submit if form is invalid', async () => {
+      await setupComponent('new');
       component.userForm.setValue({
         name: '', // Invalid required
         email: 'invalid-email',
@@ -97,8 +103,8 @@ describe('UserFormPage', () => {
       expect(userServiceMock.updateUser).not.toHaveBeenCalled();
     });
 
-    it('should call addUser when in add mode', () => {
-      setupComponent('new');
+    it('should call addUser when in add mode', async () => {
+      await setupComponent('new');
       userServiceMock.addUser.mockReturnValue(of({}));
 
       component.userForm.setValue({
@@ -110,24 +116,16 @@ describe('UserFormPage', () => {
 
       component.onSubmit();
 
-      expect(component.isSaving()).toBe(true); // Should be true during (though sync here) or handled?
-      // Note: Observable completes synchronously here, so isSaving might flicker or be false if set in error/complete?
-      // Looking at code: next: () => navigate... error: => isSaving(false).
-      // It doesn't set isSaving(false) in next?
-      // Code: request.subscribe({ next: () => router.navigate..., error: ... })
-      // It does NOT set isSaving(false) on success (presumably because we navigate away).
-
       expect(userServiceMock.addUser).toHaveBeenCalledWith({
         name: 'New User',
         email: 'new@example.com',
         role: 'user',
         active: true,
       });
-      expect(routerMock.navigate).toHaveBeenCalledWith(['/users']);
+      expect(router.navigate).toHaveBeenCalledWith(['/users']);
     });
 
-    it('should call updateUser when in edit mode', () => {
-      setupComponent('123');
+    it('should call updateUser when in edit mode', async () => {
       const mockUser = {
         id: 123,
         name: 'Old',
@@ -135,42 +133,40 @@ describe('UserFormPage', () => {
         role: 'user',
         active: true,
       };
-      userServiceMock.getUserById.mockReturnValue(of(mockUser));
+      await setupComponent('123', mockUser);
       userServiceMock.updateUser.mockReturnValue(of({}));
 
-      component.ngOnInit(); // Load user to set edit mode and ID
-
       component.userForm.patchValue({
-        name: 'Updated User',
+        name: 'Updated Name',
       });
 
       component.onSubmit();
 
-      expect(userServiceMock.updateUser).toHaveBeenCalledWith(
-        expect.objectContaining({
-          id: 123,
-          name: 'Updated User',
-        })
-      );
-      expect(routerMock.navigate).toHaveBeenCalledWith(['/users']);
+      expect(userServiceMock.updateUser).toHaveBeenCalledWith({
+        id: 123,
+        name: 'Updated Name',
+        email: 'old@example.com',
+        role: 'user',
+        active: true,
+      });
+      expect(router.navigate).toHaveBeenCalledWith(['/users']);
     });
 
-    it('should handle error during submission', () => {
-      setupComponent('new');
-      userServiceMock.addUser.mockReturnValue(throwError(() => new Error('Failed')));
+    it('should set isSaving to false on error', async () => {
+      await setupComponent('new');
+      userServiceMock.addUser.mockReturnValue(throwError(() => new Error('Error')));
 
       component.userForm.setValue({
-        name: 'User',
-        email: 'user@example.com',
+        name: 'New User',
+        email: 'new@example.com',
         role: 'user',
         active: true,
       });
 
       component.onSubmit();
 
-      expect(userServiceMock.addUser).toHaveBeenCalled();
-      expect(component.isSaving()).toBe(false); // Reset on error
-      expect(routerMock.navigate).not.toHaveBeenCalled();
+      expect(component.isSaving()).toBe(false);
+      expect(router.navigate).not.toHaveBeenCalled();
     });
   });
 });

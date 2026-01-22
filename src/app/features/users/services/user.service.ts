@@ -6,7 +6,7 @@ import { of, delay, Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class UserService {
-  private _users = signal<User[]>([
+  private readonly _users = signal<User[]>([
     {
       id: 1,
       name: 'Admin User',

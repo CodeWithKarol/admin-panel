@@ -1,18 +1,20 @@
 <div class="flex h-screen bg-slate-50 dark:bg-slate-900 transition-colors duration-300">
+  <app-command-palette></app-command-palette>
+
   <!-- Mobile Sidebar Overlay -->
   @if (layoutService.isSidebarOpen()) {
-  <div class="fixed inset-0 z-50 md:hidden">
-    <!-- Backdrop -->
-    <div
-      class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm transition-opacity cursor-pointer"
-      (click)="layoutService.closeSidebar()"
-    ></div>
+    <div class="fixed inset-0 z-50 md:hidden">
+      <!-- Backdrop -->
+      <div
+        class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm transition-opacity cursor-pointer"
+        (click)="layoutService.closeSidebar()"
+      ></div>
 
-    <!-- Sidebar -->
-    <app-sidebar
-      class="fixed inset-y-0 left-0 w-64 bg-white dark:bg-slate-800 shadow-xl transform transition-transform duration-300 ease-in-out"
-    />
-  </div>
+      <!-- Sidebar -->
+      <app-sidebar
+        class="fixed inset-y-0 left-0 w-64 bg-white dark:bg-slate-800 shadow-xl transform transition-transform duration-300 ease-in-out"
+      />
+    </div>
   }
 
   <!-- Sidebar (Hidden on mobile, fixed on desktop) -->
@@ -28,8 +30,13 @@
     <!-- Main Scrollable Area -->
     <main class="flex-1 overflow-x-hidden overflow-y-auto bg-slate-50 dark:bg-slate-900 p-4 md:p-8">
       <div class="max-w-7xl mx-auto">
+        <div class="mb-4">
+          <app-breadcrumbs />
+        </div>
         <router-outlet />
       </div>
     </main>
   </div>
+
+  <app-toast />
 </div>
