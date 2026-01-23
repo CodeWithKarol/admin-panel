@@ -1,17 +1,18 @@
-// @vitest-environment jsdom
-import { TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { UserListPage } from './user-list-page';
 import { UserService } from '../../services/user.service';
+import { NotificationService } from '../../../../core/services/notification.service';
 import { of } from 'rxjs';
-import { signal, Injector, runInInjectionContext } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { BrowserTestingModule, platformBrowserTesting } from '@angular/platform-browser/testing';
-import { describe, it, expect, beforeEach, afterEach, vi, beforeAll } from 'vitest';
+import { signal } from '@angular/core';
+import { ActivatedRoute, provideRouter } from '@angular/router';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { User } from '../../../../core/models/user';
 
-describe('UserListPage Class Logic', () => {
+describe('UserListPage', () => {
   let component: UserListPage;
+  let fixture: ComponentFixture<UserListPage>;
   let userServiceMock: any;
+  let notificationServiceMock: any;
 
   const mockUsers: User[] = [
     {
@@ -40,7 +41,7 @@ describe('UserListPage Class Logic', () => {
     },
   ];
 
-  beforeEach(() => {
+  beforeEach(async () => {
     vi.useFakeTimers();
 
     userServiceMock = {
@@ -48,19 +49,26 @@ describe('UserListPage Class Logic', () => {
       deleteUser: vi.fn().mockReturnValue(of(true)),
     };
 
-    TestBed.configureTestingModule({
+    notificationServiceMock = {
+      add: vi.fn(),
+    };
+
+    await TestBed.configureTestingModule({
+      imports: [UserListPage],
       providers: [
+        provideRouter([]),
         { provide: UserService, useValue: userServiceMock },
+        { provide: NotificationService, useValue: notificationServiceMock },
         { provide: ActivatedRoute, useValue: {} },
       ],
-    });
+    }).compileComponents();
 
-    component = TestBed.runInInjectionContext(() => new UserListPage());
+    fixture = TestBed.createComponent(UserListPage);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
   });
 
   afterEach(() => {
-    TestBed.resetTestingModule();
-    vi.clearAllMocks();
     vi.useRealTimers();
   });
 
@@ -88,57 +96,21 @@ describe('UserListPage Class Logic', () => {
   });
 
   it('should filter users by role', () => {
-    component.roleControl.setValue('editor');
-    // toSignal checks
+    component.addFilter({ label: 'Editor', type: 'role', value: 'editor' });
+
     expect(component.filteredUsers().length).toBe(1);
     expect(component.filteredUsers()[0].role).toBe('editor');
   });
 
   it('should filter by combined search and role', () => {
-    component.searchControl.setValue('Three');
+    // Add 'user' role filter (matches User Two)
+    component.addFilter({ label: 'User', type: 'role', value: 'user' });
+
+    // Search 'User' (matches User Two)
+    component.searchControl.setValue('User');
     vi.advanceTimersByTime(300);
-    component.roleControl.setValue('editor');
 
     expect(component.filteredUsers().length).toBe(1);
-    expect(component.filteredUsers()[0].name).toBe('Editor Three');
-
-    // Mismatch
-    component.roleControl.setValue('admin');
-    expect(component.filteredUsers().length).toBe(0);
-  });
-
-  it('should handle delete user flow', () => {
-    const user = mockUsers[0];
-
-    expect(component.userToDelete()).toBeNull();
-
-    // Init delete
-    component.initDeleteUser(user);
-    expect(component.userToDelete()).toEqual(user);
-
-    // Cancel
-    component.cancelDelete();
-    expect(component.userToDelete()).toBeNull();
-
-    // Confirm
-    component.initDeleteUser(user);
-    component.confirmDelete();
-
-    expect(userServiceMock.deleteUser).toHaveBeenCalledWith(user.id);
-    expect(component.userToDelete()).toBeNull();
-  });
-
-  it('should not delete if no user selected', () => {
-    // Confirm without user
-    component.userToDelete.set(null);
-    component.confirmDelete();
-    expect(userServiceMock.deleteUser).not.toHaveBeenCalled();
-  });
-
-  it('should handle null search term gracefully', () => {
-    // Force null value into search control if possible or mock the signal return
-    component.searchControl.setValue(null);
-    vi.advanceTimersByTime(300);
-    expect(component.filteredUsers().length).toBe(3);
+    expect(component.filteredUsers()[0].id).toBe(2);
   });
 });

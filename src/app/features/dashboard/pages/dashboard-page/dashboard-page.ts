@@ -1,7 +1,9 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, ChangeDetectionStrategy, inject, signal, OnInit } from '@angular/core';
 import { RevenueChart } from '../../components/revenue-chart/revenue-chart';
 import { UserActivityChart } from '../../components/user-activity-chart/user-activity-chart';
+import { NotificationService } from '../../../../core/services/notification.service';
+import { Skeleton } from '../../../../shared/components/skeleton/skeleton';
+import { HasRoleDirective } from '../../../../shared/directives/has-role.directive';
 import {
   LucideAngularModule,
   Users,
@@ -10,20 +12,28 @@ import {
   Ticket,
   TrendingUp,
   TrendingDown,
+  Download,
+  Filter,
 } from 'lucide-angular';
 
 @Component({
   selector: 'app-dashboard',
-  imports: [CommonModule, RevenueChart, UserActivityChart, LucideAngularModule],
+  imports: [RevenueChart, UserActivityChart, LucideAngularModule, Skeleton, HasRoleDirective],
   templateUrl: './dashboard-page.html',
   styleUrl: './dashboard-page.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DashboardPage {
+export class DashboardPage implements OnInit {
+  private notificationService = inject(NotificationService);
+
   readonly TrendingUp = TrendingUp;
   readonly TrendingDown = TrendingDown;
+  readonly Download = Download;
+  readonly Filter = Filter;
 
-  stats = [
+  protected isLoading = signal(true);
+
+  protected readonly stats = [
     {
       label: 'Total Users',
       value: '12,345',
@@ -47,10 +57,43 @@ export class DashboardPage {
     },
     {
       label: 'Support Tickets',
-      value: '56',
-      trend: 2,
+      value: '456',
+      trend: 5,
       icon: Ticket,
       colorClass: 'bg-purple-100 text-purple-600',
     },
   ];
+
+  ngOnInit() {
+    // Simulate initial loading
+    setTimeout(() => {
+      this.isLoading.set(false);
+      // Optional: Don't always show this to avoid spam, but for demo it's fine
+      // or remove if not needed. Keeping it for now.
+      // this.notificationService.add('Dashboard updated', 'success');
+    }, 1500);
+  }
+
+  exportData() {
+    this.notificationService.add({
+      title: 'Export',
+      message: 'Downloading report...',
+      type: 'info',
+    });
+    setTimeout(() => {
+      this.notificationService.add({
+        title: 'Export',
+        message: 'Report downloaded successfully',
+        type: 'success',
+      });
+    }, 1000);
+  }
+
+  createReport() {
+    this.notificationService.add({
+      title: 'Report',
+      message: 'Creating new report...',
+      type: 'info',
+    });
+  }
 }

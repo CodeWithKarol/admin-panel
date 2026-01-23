@@ -1,5 +1,4 @@
 import { Component, ChangeDetectionStrategy, inject, signal, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { UserService } from '../../services/user.service';
@@ -7,24 +6,23 @@ import { LucideAngularModule, ChevronDown } from 'lucide-angular';
 
 @Component({
   selector: 'app-user-form-page',
-  standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterLink, LucideAngularModule],
+  imports: [ReactiveFormsModule, RouterLink, LucideAngularModule],
   templateUrl: './user-form-page.html',
   styleUrl: './user-form-page.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UserFormPage implements OnInit {
   readonly ChevronDown = ChevronDown;
-  private fb = inject(FormBuilder);
-  private userService = inject(UserService);
-  private router = inject(Router);
-  private route = inject(ActivatedRoute);
+  private readonly fb = inject(FormBuilder);
+  private readonly userService = inject(UserService);
+  private readonly router = inject(Router);
+  private readonly route = inject(ActivatedRoute);
 
-  isEditMode = signal(false);
-  isSaving = signal(false);
-  userId = signal<number | null>(null);
+  readonly isEditMode = signal(false);
+  readonly isSaving = signal(false);
+  readonly userId = signal<number | null>(null);
 
-  userForm = this.fb.group({
+  readonly userForm = this.fb.group({
     name: ['', Validators.required],
     email: ['', [Validators.required, Validators.email]],
     role: ['user', Validators.required],

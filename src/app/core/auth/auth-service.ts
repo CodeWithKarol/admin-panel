@@ -1,4 +1,5 @@
-import { Injectable, signal, computed, inject } from '@angular/core';
+import { Injectable, signal, computed, inject, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { Router } from '@angular/router';
 import { LoginCredentials, AuthResponse } from './auth.models';
 import { User } from '../models/user';
@@ -9,6 +10,8 @@ import { of, delay, tap, Observable } from 'rxjs';
 })
 export class AuthService {
   private router = inject(Router);
+  private platformId = inject(PLATFORM_ID);
+  private isBrowser = isPlatformBrowser(this.platformId);
 
   // State
   private _currentUser = signal<User | null>(null);
@@ -19,20 +22,29 @@ export class AuthService {
   isAuthenticated = this._isAuthenticated;
 
   constructor() {
-    // Check local storage for existing session
-    const storedUser = localStorage.getItem('user');
-    if (storedUser) {
-      this._currentUser.set(JSON.parse(storedUser));
+    if (this.isBrowser) {
+      // Check local storage for existing session
+      const storedUser = localStorage.getItem('user');
+      if (storedUser) {
+        this._currentUser.set(JSON.parse(storedUser));
+      }
     }
   }
 
   login(credentials: LoginCredentials): Observable<AuthResponse> {
-    // Mock API call
+    // Mock API call - Derive role from email for testing
+    let role: User['role'] = 'user';
+    if (credentials.email.includes('admin')) {
+      role = 'admin';
+    } else if (credentials.email.includes('editor')) {
+      role = 'editor';
+    }
+
     const mockUser: User = {
       id: 1,
-      name: 'Admin User',
+      name: role === 'admin' ? 'Admin User' : role === 'editor' ? 'Editor User' : 'Regular User',
       email: credentials.email,
-      role: 'admin',
+      role: role,
       active: true,
       lastLogin: new Date(),
     };
@@ -46,17 +58,38 @@ export class AuthService {
       delay(1000), // Simulate network latency
       tap((res) => {
         this._currentUser.set(res.user);
-        localStorage.setItem('user', JSON.stringify(res.user));
-        localStorage.setItem('token', res.token);
+        if (this.isBrowser) {
+          localStorage.setItem('user', JSON.stringify(res.user));
+          localStorage.setItem('token', res.token);
+        }
         this.router.navigate(['/dashboard']);
-      })
+      }),
     );
   }
 
   logout(): void {
     this._currentUser.set(null);
-    localStorage.removeItem('user');
-    localStorage.removeItem('token');
+    if (this.isBrowser) {
+      localStorage.removeItem('user');
+      localStorage.removeItem('token');
+    }
     this.router.navigate(['/auth/login']);
+  }
+
+  updateProfile(data: Partial<User>): Observable<User> {
+    const currentUser = this._currentUser();
+    if (!currentUser) throw new Error('No user logged in');
+
+    const updatedUser = { ...currentUser, ...data };
+
+    return of(updatedUser).pipe(
+      delay(800),
+      tap((user) => {
+        this._currentUser.set(user);
+        if (this.isBrowser) {
+          localStorage.setItem('user', JSON.stringify(user));
+        }
+      }),
+    );
   }
 }

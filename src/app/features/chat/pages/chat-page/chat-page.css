@@ -1,0 +1,14 @@
+:host {
+    display: block;
+    height: calc(100vh - 64px); /* Subtract header height roughly */
+    overflow: hidden;
+}
+
+.chat-container {
+    height: 100%;
+}
+
+.messages-area {
+    background-image: radial-gradient(#e5e7eb 1px, transparent 1px);
+    background-size: 20px 20px;
+}

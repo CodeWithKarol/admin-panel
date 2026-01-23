@@ -1,18 +1,67 @@
-import { TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DashboardPage } from './dashboard-page';
+import { NotificationService } from '../../../../core/services/notification.service';
+import { signal } from '@angular/core';
+import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest';
 
 describe('DashboardPage', () => {
   let component: DashboardPage;
+  let fixture: ComponentFixture<DashboardPage>;
+  let notificationServiceSpy: { add: ReturnType<typeof vi.fn> };
 
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      providers: [DashboardPage],
-    });
+  beforeEach(async () => {
+    vi.useFakeTimers();
+    notificationServiceSpy = {
+      add: vi.fn(),
+    };
 
-    component = TestBed.runInInjectionContext(() => new DashboardPage());
+    await TestBed.configureTestingModule({
+      imports: [DashboardPage],
+      providers: [{ provide: NotificationService, useValue: notificationServiceSpy }],
+    }).compileComponents();
+
+    fixture = TestBed.createComponent(DashboardPage);
+    component = fixture.componentInstance;
+    fixture.detectChanges(); // ngOnInit runs
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
   });
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should initialize with loading state', () => {
+    // ngOnInit started the timer but it hasn't finished
+    expect(component['isLoading']()).toBe(true);
+  });
+
+  it('should turn off loading after timeout', () => {
+    expect(component['isLoading']()).toBe(true);
+    vi.advanceTimersByTime(1500);
+    expect(component['isLoading']()).toBe(false);
+  });
+
+  it('should show export notification', () => {
+    component.exportData();
+    expect(notificationServiceSpy.add).toHaveBeenCalledWith(
+      expect.objectContaining({
+        title: 'Export',
+        message: 'Downloading report...',
+        type: 'info',
+      }),
+    );
+
+    vi.advanceTimersByTime(1000);
+
+    expect(notificationServiceSpy.add).toHaveBeenCalledWith(
+      expect.objectContaining({
+        title: 'Export',
+        message: 'Report downloaded successfully',
+        type: 'success',
+      }),
+    );
   });
 });

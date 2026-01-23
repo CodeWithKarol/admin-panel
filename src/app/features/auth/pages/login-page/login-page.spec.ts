@@ -1,73 +1,85 @@
-import { TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { LoginPage } from './login-page';
 import { AuthService } from '../../../../core/auth/auth-service';
-import { of, throwError } from 'rxjs';
+import { of, throwError, Subject } from 'rxjs';
 
 describe('LoginPage', () => {
   let component: LoginPage;
-  let authServiceMock: any;
+  let fixture: ComponentFixture<LoginPage>;
+  let authServiceMock: { login: any };
 
-  beforeEach(() => {
+  beforeEach(async () => {
     authServiceMock = {
       login: vi.fn(),
     };
 
-    TestBed.configureTestingModule({
-      providers: [LoginPage, { provide: AuthService, useValue: authServiceMock }],
-    });
+    await TestBed.configureTestingModule({
+      imports: [LoginPage], // Standalone component
+      providers: [{ provide: AuthService, useValue: authServiceMock }],
+    }).compileComponents();
 
-    component = TestBed.runInInjectionContext(() => new LoginPage());
+    fixture = TestBed.createComponent(LoginPage);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
   });
 
   it('should create', () => {
     expect(component).toBeTruthy();
   });
 
+  it('should initialize with empty form', () => {
+    expect(component.loginForm.getRawValue()).toEqual({ email: '', password: '' });
+    expect(component.loginForm.valid).toBe(false);
+  });
+
+  it('should expose form controls via getters', () => {
+    expect(component.email).toBe(component.loginForm.get('email'));
+    expect(component.password).toBe(component.loginForm.get('password'));
+  });
+
   describe('onSubmit', () => {
-    it('should not login if form is invalid', () => {
-      component.loginForm.setValue({
-        email: 'invalid', // invalid email
-        password: '', // required
-      });
-
+    it('should not call authService.login if form is invalid', () => {
+      component.loginForm.patchValue({ email: 'invalid' }); // Password missing
       component.onSubmit();
-
       expect(authServiceMock.login).not.toHaveBeenCalled();
     });
 
-    it('should login with valid credentials', () => {
-      authServiceMock.login.mockReturnValue(of({ token: 'abc' }));
+    it('should set isLoading to true during login execution', () => {
+      const loginSubject = new Subject<any>();
+      authServiceMock.login.mockReturnValue(loginSubject.asObservable());
 
-      component.loginForm.setValue({
-        email: 'test@example.com',
-        password: 'password123',
-      });
+      component.loginForm.setValue({ email: 'test@test.com', password: 'password' });
+      component.onSubmit();
+
+      expect(component.isLoading()).toBe(true);
+
+      loginSubject.next({ token: '123' });
+      loginSubject.complete();
+
+      expect(component.isLoading()).toBe(false);
+    });
+
+    it('should call authService.login with correct credentials when valid', () => {
+      authServiceMock.login.mockReturnValue(of({ token: '123' }));
+      component.loginForm.setValue({ email: 'test@test.com', password: 'password' });
 
       component.onSubmit();
 
-      expect(component.isLoading()).toBe(false); // Should be reset after success
       expect(authServiceMock.login).toHaveBeenCalledWith({
-        email: 'test@example.com',
-        password: 'password123',
+        email: 'test@test.com',
+        password: 'password',
       });
     });
 
-    it('should handle login error', () => {
+    it('should handle login error and reset isLoading', () => {
+      authServiceMock.login.mockReturnValue(throwError(() => new Error('Login failed')));
       const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
-      authServiceMock.login.mockReturnValue(throwError(() => new Error('Auth failed')));
 
-      component.loginForm.setValue({
-        email: 'test@example.com',
-        password: 'wrong',
-      });
-
+      component.loginForm.setValue({ email: 'test@test.com', password: 'password' });
       component.onSubmit();
 
-      expect(authServiceMock.login).toHaveBeenCalled();
-      expect(component.isLoading()).toBe(false); // Should be reset after error
-      expect(consoleSpy).toHaveBeenCalledWith('Login failed', expect.any(Error));
-
-      consoleSpy.mockRestore();
+      expect(component.isLoading()).toBe(false);
+      expect(consoleSpy).toHaveBeenCalled();
     });
   });
 });

@@ -1,43 +1,42 @@
 import { Component, ChangeDetectionStrategy, inject, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthService } from '../../../../core/auth/auth-service';
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [ReactiveFormsModule],
   templateUrl: './login-page.html',
   styleUrl: './login-page.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LoginPage {
-  private fb = inject(FormBuilder);
+  private fb = inject(NonNullableFormBuilder);
   private authService = inject(AuthService);
 
-  isLoading = signal(false);
+  readonly isLoading = signal(false);
 
-  loginForm = this.fb.group({
+  readonly loginForm = this.fb.group({
     email: ['', [Validators.required, Validators.email]],
     password: ['', [Validators.required]],
   });
 
   get email() {
-    return this.loginForm.get('email');
+    return this.loginForm.controls.email;
   }
+
   get password() {
-    return this.loginForm.get('password');
+    return this.loginForm.controls.password;
   }
 
   onSubmit() {
     if (this.loginForm.valid) {
       this.isLoading.set(true);
-      const { email, password } = this.loginForm.value;
+      const { email, password } = this.loginForm.getRawValue();
 
       this.authService
         .login({
-          email: email!,
-          password: password!,
+          email,
+          password,
         })
         .subscribe({
           next: () => {

@@ -1,0 +1,119 @@
+<div class="h-[calc(100vh-theme('spacing.20'))] overflow-x-auto overflow-y-hidden">
+  <div class="h-full flex gap-6 pb-4" cdkDropListGroup>
+    @for (column of columns(); track column.id) {
+      <div
+        class="w-80 shrink-0 flex flex-col bg-slate-100 dark:bg-slate-800/50 rounded-xl border border-slate-200 dark:border-slate-700/50 max-h-full"
+      >
+        <!-- Column Header -->
+        <div class="p-4 flex items-center justify-between shrink-0">
+          <div class="flex items-center gap-2">
+            <h3 class="font-semibold text-slate-700 dark:text-slate-200">{{ column.title }}</h3>
+            <span
+              class="px-2 py-0.5 rounded-full bg-slate-200 dark:bg-slate-700 text-xs font-medium text-slate-600 dark:text-slate-400"
+            >
+              {{ column.tasks.length }}
+            </span>
+          </div>
+          <button
+            class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 rounded p-1 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
+          >
+            <lucide-angular [img]="MoreHorizontal" class="w-5 h-5"></lucide-angular>
+          </button>
+        </div>
+
+        <!-- Task List -->
+        <div
+          cdkDropList
+          [id]="column.id"
+          [cdkDropListData]="column.tasks"
+          class="flex-1 overflow-y-auto px-3 pb-3 flex flex-col gap-3 min-h-0 custom-scrollbar"
+          (cdkDropListDropped)="drop($event)"
+        >
+          @for (task of column.tasks; track task.id) {
+            <div
+              cdkDrag
+              class="bg-white dark:bg-slate-800 p-4 rounded-lg shadow-sm border border-slate-200 dark:border-slate-700 cursor-grab active:cursor-grabbing hover:shadow-md transition-shadow group relative"
+            >
+              <!-- Custom Drag Preview -->
+              <div
+                *cdkDragPreview
+                class="bg-white dark:bg-slate-800 p-4 rounded-lg shadow-xl border border-indigo-500/50 dark:border-indigo-400/50 rotate-2 w-80 opacity-90 cursor-grabbing"
+              >
+                <p class="text-sm font-medium text-slate-900 dark:text-slate-100 mb-2">
+                  {{ task.title }}
+                </p>
+              </div>
+
+              <!-- Drag Placeholder -->
+              <div *cdkDragPlaceholder class="custom-placeholder rounded-lg mb-3"></div>
+
+              <div class="flex items-start justify-between mb-2">
+                <span
+                  class="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded"
+                  [class]="task.priority | kanbanPriorityColor"
+                >
+                  {{ task.priority }}
+                </span>
+                <button
+                  class="opacity-0 group-hover:opacity-100 transition-opacity text-slate-400 hover:text-slate-600 dark:hover:text-slate-300"
+                >
+                  <lucide-angular [img]="MoreHorizontal" class="w-4 h-4"></lucide-angular>
+                </button>
+              </div>
+
+              <p class="text-sm font-medium text-slate-900 dark:text-slate-100 mb-2">
+                {{ task.title }}
+              </p>
+
+              @if (task.description) {
+                <p class="text-xs text-slate-500 dark:text-slate-400 mb-3 line-clamp-2">
+                  {{ task.description }}
+                </p>
+              }
+
+              <div
+                class="flex items-center justify-between mt-auto pt-2 border-t border-slate-100 dark:border-slate-700/50"
+              >
+                <div class="flex gap-1 flex-wrap">
+                  @for (tag of task.tags; track $index) {
+                    <span
+                      class="text-[10px] bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-400 px-1.5 py-0.5 rounded border border-slate-200 dark:border-slate-600/50"
+                    >
+                      {{ tag }}
+                    </span>
+                  }
+                </div>
+                <div
+                  class="w-6 h-6 rounded-full bg-indigo-100 dark:bg-indigo-900/50 text-indigo-600 dark:text-indigo-400 flex items-center justify-center text-[10px] font-bold"
+                >
+                  AI
+                </div>
+              </div>
+            </div>
+          }
+        </div>
+
+        <!-- Add Button -->
+        <div class="p-3 shrink-0">
+          <button
+            *appHasRole="['admin', 'editor']"
+            class="flex items-center gap-2 w-full justify-center py-2 text-sm font-medium text-slate-500 hover:text-indigo-600 dark:text-slate-400 dark:hover:text-indigo-400 hover:bg-slate-200/50 dark:hover:bg-slate-700/50 rounded-lg transition-colors border border-dashed border-slate-300 dark:border-slate-600"
+          >
+            <lucide-angular [img]="Plus" class="w-4 h-4"></lucide-angular>
+            Add Task
+          </button>
+        </div>
+      </div>
+    }
+
+    <!-- Add Column Button -->
+    <div class="shrink-0 w-80" *appHasRole="'admin'">
+      <button
+        class="flex items-center gap-2 w-full py-3 px-4 bg-slate-100 dark:bg-slate-800/30 hover:bg-slate-200 dark:hover:bg-slate-800/50 rounded-xl text-slate-500 dark:text-slate-400 font-medium transition-colors border-2 border-dashed border-slate-200 dark:border-slate-700/50"
+      >
+        <lucide-angular [img]="Plus" class="w-5 h-5"></lucide-angular>
+        Add New Column
+      </button>
+    </div>
+  </div>
+</div>

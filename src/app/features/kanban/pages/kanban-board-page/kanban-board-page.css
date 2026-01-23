@@ -1,0 +1,41 @@
+.cdk-drag-preview {
+  box-sizing: border-box;
+}
+
+.cdk-drag-animating {
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.cdk-drop-list-dragging .cdk-drag {
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.custom-placeholder {
+    background: rgba(99, 102, 241, 0.05); /* indigo-500 with very low opacity */
+    border: 2px dashed rgba(99, 102, 241, 0.2);
+    min-height: 150px;
+    border-radius: 0.5rem;
+}
+
+:host-context(.dark) .custom-placeholder {
+    background: rgba(99, 102, 241, 0.1);
+    border-color: rgba(99, 102, 241, 0.3);
+}
+
+/* Hide scrollbar for cleaner look but keep functionality */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: rgba(156, 163, 175, 0.5);
+  border-radius: 20px;
+}
+
+.custom-scrollbar:hover::-webkit-scrollbar-thumb {
+  background-color: rgba(156, 163, 175, 0.8);
+}
