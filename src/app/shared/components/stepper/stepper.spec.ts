@@ -33,7 +33,7 @@ describe('Stepper', () => {
   });
 
   it('should indicate current step', () => {
-    const currentStepUrl = fixture.debugElement.query(By.css('a[aria-current="step"]'));
+    const currentStepUrl = fixture.debugElement.query(By.css('[aria-current="step"]'));
     expect(currentStepUrl).toBeTruthy();
     expect(currentStepUrl.nativeElement.textContent).toContain('Step 1');
   });
@@ -42,7 +42,7 @@ describe('Stepper', () => {
     fixture.componentRef.setInput('currentStep', 1);
     fixture.detectChanges();
 
-    const currentStepUrl = fixture.debugElement.query(By.css('a[aria-current="step"]'));
+    const currentStepUrl = fixture.debugElement.query(By.css('[aria-current="step"]'));
     expect(currentStepUrl.nativeElement.textContent).toContain('Step 2');
   });
 
@@ -53,7 +53,7 @@ describe('Stepper', () => {
     fixture.componentRef.setInput('currentStep', 1);
     fixture.detectChanges();
 
-    const step0 = fixture.debugElement.queryAll(By.css('li'))[0].query(By.css('a'));
+    const step0 = fixture.debugElement.queryAll(By.css('li'))[0].query(By.css('button'));
     step0.triggerEventHandler('click', null);
 
     expect(component.stepClick.emit).toHaveBeenCalledWith(0);
