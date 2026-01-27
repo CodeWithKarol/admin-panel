@@ -36,7 +36,7 @@ export class NotificationService {
     );
   }
 
-  add(notification: Omit<AppNotification, 'id' | 'timestamp' | 'read'>, showToast: boolean = true) {
+  add(notification: Omit<AppNotification, 'id' | 'timestamp' | 'read'>, showToast = true) {
     const id = this.counter++;
     const newNotification: AppNotification = {
       ...notification,

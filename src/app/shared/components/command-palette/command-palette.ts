@@ -64,7 +64,7 @@ interface CommandItem {
               placeholder="Type a command or search..."
               [value]="query()"
               (input)="updateQuery($event)"
-              autofocus
+             
             />
             <kbd
               class="hidden sm:inline-flex items-center gap-1 px-2 py-0.5 text-xs font-medium text-slate-500 bg-slate-100 dark:bg-slate-700 dark:text-slate-400 rounded"

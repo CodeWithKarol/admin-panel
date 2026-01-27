@@ -107,7 +107,7 @@ export class Breadcrumbs {
       }
 
       if (routeConfig.data && routeConfig.data['breadcrumb']) {
-        let label = routeConfig.data['breadcrumb'];
+        const label = routeConfig.data['breadcrumb'];
         if (breadcrumbs.length === 0 || breadcrumbs[breadcrumbs.length - 1].label !== label) {
           breadcrumbs.push({ label, url });
         }

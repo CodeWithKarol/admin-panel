@@ -8,7 +8,7 @@ describe('Toast', () => {
   let component: Toast;
   let fixture: ComponentFixture<Toast>;
   let mockToastService: any;
-  let toastsSignal = signal<any[]>([]);
+  const toastsSignal = signal<any[]>([]);
 
   beforeEach(async () => {
     mockToastService = {
