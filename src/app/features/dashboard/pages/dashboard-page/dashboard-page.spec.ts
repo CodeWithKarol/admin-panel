@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DashboardPage } from './dashboard-page';
 import { NotificationService } from '../../../../core/services/notification.service';
+import { AuthService } from '../../../../core/auth/auth-service';
 import { signal } from '@angular/core';
 import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest';
 
@@ -8,6 +9,7 @@ describe('DashboardPage', () => {
   let component: DashboardPage;
   let fixture: ComponentFixture<DashboardPage>;
   let notificationServiceSpy: { add: ReturnType<typeof vi.fn> };
+  let authServiceMock: any;
 
   beforeEach(async () => {
     vi.useFakeTimers();
@@ -15,9 +17,16 @@ describe('DashboardPage', () => {
       add: vi.fn(),
     };
 
+    authServiceMock = {
+      currentUser: signal(null),
+    };
+
     await TestBed.configureTestingModule({
       imports: [DashboardPage],
-      providers: [{ provide: NotificationService, useValue: notificationServiceSpy }],
+      providers: [
+        { provide: NotificationService, useValue: notificationServiceSpy },
+        { provide: AuthService, useValue: authServiceMock },
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(DashboardPage);

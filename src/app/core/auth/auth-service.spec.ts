@@ -6,6 +6,32 @@ import { AuthService } from './auth-service';
 import { User } from '../models/user';
 import { describe, it, expect, beforeEach, afterEach, vi, beforeAll } from 'vitest';
 
+const mockLocalStorage = (function () {
+  let store: Record<string, string> = {};
+  return {
+    getItem: vi.fn((key: string) => store[key] || null),
+    setItem: vi.fn((key: string, value: string) => {
+      store[key] = value.toString();
+    }),
+    clear: vi.fn(() => {
+      store = {};
+    }),
+    removeItem: vi.fn((key: string) => {
+      delete store[key];
+    }),
+    key: vi.fn((i: number) => {
+      return Object.keys(store)[i] || null;
+    }),
+    get length() {
+      return Object.keys(store).length;
+    },
+  };
+})();
+
+Object.defineProperty(window, 'localStorage', {
+  value: mockLocalStorage,
+});
+
 describe('AuthService', () => {
   let service: AuthService;
   let routerSpy: { navigate: ReturnType<typeof vi.fn> };

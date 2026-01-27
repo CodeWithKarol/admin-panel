@@ -3,19 +3,28 @@ import { Sidebar } from './sidebar';
 import { ActivatedRoute } from '@angular/router';
 import { of } from 'rxjs';
 import { LayoutService } from '../../../core/layout/layout-service';
+import { AuthService } from '../../../core/auth/auth-service';
+import { signal } from '@angular/core';
+import { vi, describe, beforeEach, it, expect } from 'vitest';
 
 describe('Sidebar', () => {
   let component: Sidebar;
   let layoutServiceMock: any;
+  let authServiceMock: any;
 
   beforeEach(() => {
     layoutServiceMock = {
       closeSidebar: vi.fn(),
     };
 
+    authServiceMock = {
+      currentUser: signal(null),
+    };
+
     TestBed.configureTestingModule({
       providers: [
         Sidebar,
+        { provide: AuthService, useValue: authServiceMock },
         {
           provide: ActivatedRoute,
           useValue: {

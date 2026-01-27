@@ -7,12 +7,14 @@ import { signal } from '@angular/core';
 import { ActivatedRoute, provideRouter } from '@angular/router';
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { User } from '../../../../core/models/user';
+import { AuthService } from '../../../../core/auth/auth-service';
 
 describe('UserListPage', () => {
   let component: UserListPage;
   let fixture: ComponentFixture<UserListPage>;
   let userServiceMock: any;
   let notificationServiceMock: any;
+  let authServiceMock: any;
 
   const mockUsers: User[] = [
     {
@@ -53,12 +55,17 @@ describe('UserListPage', () => {
       add: vi.fn(),
     };
 
+    authServiceMock = {
+      currentUser: signal(null),
+    };
+
     await TestBed.configureTestingModule({
       imports: [UserListPage],
       providers: [
         provideRouter([]),
         { provide: UserService, useValue: userServiceMock },
         { provide: NotificationService, useValue: notificationServiceMock },
+        { provide: AuthService, useValue: authServiceMock },
         { provide: ActivatedRoute, useValue: {} },
       ],
     }).compileComponents();

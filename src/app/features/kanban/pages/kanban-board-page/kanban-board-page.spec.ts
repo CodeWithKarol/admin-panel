@@ -5,10 +5,12 @@ import { signal } from '@angular/core';
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import { KanbanTask } from '../../models/kanban.models';
 import { vi } from 'vitest';
+import { AuthService } from '../../../../core/auth/auth-service';
 
 describe('KanbanBoardPage', () => {
   let component: KanbanBoardPage;
   let fixture: ComponentFixture<KanbanBoardPage>;
+  let authServiceMock: any;
   let kanbanServiceSpy: {
     columns: ReturnType<typeof signal>;
     reorderTask: ReturnType<typeof vi.fn>;
@@ -22,9 +24,16 @@ describe('KanbanBoardPage', () => {
       moveTask: vi.fn(),
     };
 
+    authServiceMock = {
+      currentUser: signal(null),
+    };
+
     await TestBed.configureTestingModule({
       imports: [KanbanBoardPage],
-      providers: [{ provide: KanbanService, useValue: kanbanServiceSpy }],
+      providers: [
+        { provide: KanbanService, useValue: kanbanServiceSpy },
+        { provide: AuthService, useValue: authServiceMock },
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(KanbanBoardPage);
