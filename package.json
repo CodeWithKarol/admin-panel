@@ -7,8 +7,8 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test --watch=false",
-    "build:ci": "npm run test && npm run build",
-    "lint": "ng lint"
+    "lint": "ng lint",
+    "build:ci": "npm run lint && npm run test && npm run build"
   },
   "prettier": {
     "printWidth": 100,
