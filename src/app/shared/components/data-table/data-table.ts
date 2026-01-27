@@ -214,7 +214,9 @@ export class DataTable<T> {
     if (!column) return rawData;
 
     return [...rawData].sort((a, b) => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const valA = (a as any)[column];
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const valB = (b as any)[column];
 
       if (valA < valB) return direction === 'asc' ? -1 : 1;
@@ -255,8 +257,8 @@ export class DataTable<T> {
     return pages;
   });
 
-  getValue(row: T, key: string | keyof T): any {
-    return (row as any)[key];
+  getValue(row: T, key: string | keyof T): unknown {
+    return (row as Record<string, unknown>)[key as string];
   }
 
   handleSort(key: keyof T | string | undefined) {

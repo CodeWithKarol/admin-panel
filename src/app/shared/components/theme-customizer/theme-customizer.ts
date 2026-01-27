@@ -18,7 +18,14 @@ import { ThemeService, BrandColor } from '../../../core/theme/theme.service';
 
       @if (isOpen()) {
         <!-- Backdrop -->
-        <div class="fixed inset-0 z-40" (click)="isOpen.set(false)"></div>
+        <button
+          type="button"
+          class="fixed inset-0 z-40 w-full h-full bg-transparent border-0"
+          (click)="isOpen.set(false)"
+          (keyup.escape)="isOpen.set(false)"
+          tabindex="-1"
+          aria-label="Close theme customizer"
+        ></button>
 
         <!-- Dropdown -->
         <div

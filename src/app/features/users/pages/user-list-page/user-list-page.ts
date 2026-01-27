@@ -26,7 +26,7 @@ export interface FilterChip {
   id: string;
   label: string;
   type: 'role' | 'status' | 'date';
-  value: any;
+  value: unknown;
 }
 
 @Component({
@@ -45,11 +45,11 @@ export interface FilterChip {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UserListPage implements OnInit {
-  readonly userCell = viewChild.required<TemplateRef<any>>('userCell');
-  readonly roleCell = viewChild.required<TemplateRef<any>>('roleCell');
-  readonly statusCell = viewChild.required<TemplateRef<any>>('statusCell');
-  readonly dateCell = viewChild.required<TemplateRef<any>>('dateCell');
-  readonly actionCell = viewChild.required<TemplateRef<any>>('actionCell');
+  readonly userCell = viewChild.required<TemplateRef<unknown>>('userCell');
+  readonly roleCell = viewChild.required<TemplateRef<unknown>>('roleCell');
+  readonly statusCell = viewChild.required<TemplateRef<unknown>>('statusCell');
+  readonly dateCell = viewChild.required<TemplateRef<unknown>>('dateCell');
+  readonly actionCell = viewChild.required<TemplateRef<unknown>>('actionCell');
 
   readonly ChevronDown = ChevronDown;
   readonly Pencil = Pencil;
@@ -153,7 +153,7 @@ export class UserListPage implements OnInit {
           // Calculate difference in days
           const diffTime = Math.abs(now.getTime() - new Date(user.lastLogin).getTime());
           const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-          return diffDays <= f.value;
+          return diffDays <= (f.value as number);
         });
         if (!hasMatch) return false;
       }

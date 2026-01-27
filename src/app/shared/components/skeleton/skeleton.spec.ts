@@ -1,7 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Skeleton } from './skeleton';
 import { By } from '@angular/platform-browser';
-import { signal } from '@angular/core';
 
 describe('Skeleton', () => {
   let component: Skeleton;

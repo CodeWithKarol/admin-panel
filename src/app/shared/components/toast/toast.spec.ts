@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Toast } from './toast';
 import { ToastService } from '../../../core/services/toast.service';

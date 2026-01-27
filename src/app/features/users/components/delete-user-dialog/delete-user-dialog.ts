@@ -11,8 +11,8 @@ import { User } from '../../../../core/models/user';
 })
 export class DeleteUserDialog {
   user = input.required<User>();
-  confirm = output<void>();
-  cancel = output<void>();
+  confirmAction = output<void>();
+  cancelAction = output<void>();
 
   readonly AlertTriangle = AlertTriangle;
 }

@@ -4,7 +4,7 @@ export interface TableColumn<T> {
   key: keyof T | string;
   header: string;
   sortable?: boolean;
-  cellTemplate?: TemplateRef<any>;
+  cellTemplate?: TemplateRef<unknown>;
   width?: string;
   classes?: string;
 }

@@ -44,10 +44,14 @@ interface CommandItem {
     @if (layoutService.isCommandPaletteOpen()) {
       <div class="fixed inset-0 z-[100] flex items-start justify-center pt-[15vh] px-4 font-sans">
         <!-- Backdrop -->
-        <div
-          class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity"
+        <button
+          type="button"
+          class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity w-full h-full border-0"
           (click)="close()"
-        ></div>
+          (keyup.escape)="close()"
+          tabindex="-1"
+          aria-label="Close command palette"
+        ></button>
 
         <!-- Modal -->
         <div
@@ -64,7 +68,6 @@ interface CommandItem {
               placeholder="Type a command or search..."
               [value]="query()"
               (input)="updateQuery($event)"
-             
             />
             <kbd
               class="hidden sm:inline-flex items-center gap-1 px-2 py-0.5 text-xs font-medium text-slate-500 bg-slate-100 dark:bg-slate-700 dark:text-slate-400 rounded"
@@ -204,7 +207,7 @@ export class CommandPaletteComponent {
     return this.items().filter((item) => item.label.toLowerCase().includes(q));
   });
 
-  protected toggle(event?: any) {
+  protected toggle(event?: Event) {
     if (event) event.preventDefault();
     this.layoutService.toggleCommandPalette();
     if (this.layoutService.isCommandPaletteOpen()) {
@@ -216,7 +219,7 @@ export class CommandPaletteComponent {
     this.close();
   }
 
-  protected onArrowDown(event: any) {
+  protected onArrowDown(event: Event) {
     if (!this.layoutService.isCommandPaletteOpen()) return;
     event.preventDefault();
     const max = this.filteredItems().length - 1;
@@ -227,7 +230,7 @@ export class CommandPaletteComponent {
     }
   }
 
-  protected onArrowUp(event: any) {
+  protected onArrowUp(event: Event) {
     if (!this.layoutService.isCommandPaletteOpen()) return;
     event.preventDefault();
     const max = this.filteredItems().length - 1;
@@ -238,7 +241,7 @@ export class CommandPaletteComponent {
     }
   }
 
-  protected onEnter(event: any) {
+  protected onEnter(event: Event) {
     if (!this.layoutService.isCommandPaletteOpen()) return;
     event.preventDefault();
     const currentItems = this.filteredItems();

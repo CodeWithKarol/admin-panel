@@ -3,7 +3,6 @@ import { DataTable } from './data-table';
 import { TableColumn } from './data-table.models';
 import { By } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
-import { signal } from '@angular/core';
 
 interface User {
   id: number;

@@ -9,8 +9,8 @@ import { vi, describe, beforeEach, it, expect } from 'vitest';
 
 describe('Sidebar', () => {
   let component: Sidebar;
-  let layoutServiceMock: any;
-  let authServiceMock: any;
+  let layoutServiceMock: { closeSidebar: ReturnType<typeof vi.fn> };
+  let authServiceMock: { currentUser: ReturnType<typeof signal> };
 
   beforeEach(() => {
     layoutServiceMock = {

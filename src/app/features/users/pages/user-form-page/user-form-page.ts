@@ -63,6 +63,7 @@ export class UserFormPage implements OnInit {
       this.isSaving.set(true);
       const formValue = this.userForm.value;
 
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const userPayload: any = {
         name: formValue.name!,
         email: formValue.email!,

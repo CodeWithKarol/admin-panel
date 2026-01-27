@@ -1,9 +1,8 @@
 // @vitest-environment jsdom
 import { TestBed } from '@angular/core/testing';
-import { BrowserTestingModule, platformBrowserTesting } from '@angular/platform-browser/testing';
 import { UserService } from './user.service';
 import { User } from '../../../core/models/user';
-import { describe, it, expect, beforeEach, afterEach, vi, beforeAll } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 
 describe('UserService', () => {
   let service: UserService;

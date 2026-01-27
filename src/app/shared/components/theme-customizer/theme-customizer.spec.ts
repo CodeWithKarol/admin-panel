@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ThemeCustomizer } from './theme-customizer';
 import { ThemeService, BrandColor } from '../../../core/theme/theme.service';

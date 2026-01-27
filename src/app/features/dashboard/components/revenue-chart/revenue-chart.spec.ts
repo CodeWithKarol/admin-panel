@@ -1,6 +1,9 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @angular-eslint/component-selector */
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RevenueChart } from './revenue-chart';
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach } from 'vitest';
 import { BaseChartDirective } from 'ng2-charts';
 import { Component, Input } from '@angular/core';
 
@@ -13,7 +16,9 @@ class MockBaseChartDirective {
   @Input() data: any;
   @Input() options: any;
   @Input() type: any;
-  update() {}
+  update() {
+    return;
+  }
 }
 
 describe('RevenueChart', () => {

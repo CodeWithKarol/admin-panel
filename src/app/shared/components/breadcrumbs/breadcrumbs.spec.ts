@@ -1,8 +1,8 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Breadcrumbs } from './breadcrumbs';
 import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
-import { BehaviorSubject, Subject } from 'rxjs';
-import { provideLocationMocks } from '@angular/common/testing';
+import { Subject } from 'rxjs';
 import { LucideAngularModule } from 'lucide-angular';
 import { provideRouter } from '@angular/router';
 
@@ -23,7 +23,7 @@ describe('Breadcrumbs', () => {
           useValue: {
             events: routerEvents.asObservable(),
             url: '/dashboard',
-            createUrlTree: () => {},
+            createUrlTree: () => ({}) as any,
             serializeUrl: () => '',
             navigate: () => Promise.resolve(true),
           },

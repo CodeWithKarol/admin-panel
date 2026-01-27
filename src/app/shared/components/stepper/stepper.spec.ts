@@ -1,7 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Stepper, Step } from './stepper';
 import { By } from '@angular/platform-browser';
-import { signal } from '@angular/core';
 
 describe('Stepper', () => {
   let component: Stepper;

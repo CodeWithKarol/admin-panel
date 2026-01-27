@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 // @vitest-environment jsdom
 import { TestBed } from '@angular/core/testing';
 import { Header } from './header';
@@ -7,8 +8,7 @@ import { ThemeService } from '../../../core/theme/theme.service';
 import { ToastService } from '../../../core/services/toast.service';
 import { NotificationService } from '../../../core/services/notification.service';
 import { signal } from '@angular/core';
-import { BrowserTestingModule, platformBrowserTesting } from '@angular/platform-browser/testing';
-import { describe, it, expect, beforeEach, afterEach, vi, beforeAll } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 
 describe('Header Class Logic', () => {
   let component: Header;

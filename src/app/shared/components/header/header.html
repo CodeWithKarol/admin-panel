@@ -64,7 +64,14 @@
 
       <!-- Dropdown -->
       @if (showNotifications()) {
-        <div class="fixed inset-0 z-40 cursor-default" (click)="showNotifications.set(false)"></div>
+        <button
+          type="button"
+          class="fixed inset-0 z-40 cursor-default w-full h-full bg-transparent border-0"
+          (click)="showNotifications.set(false)"
+          (keyup.escape)="showNotifications.set(false)"
+          tabindex="-1"
+          aria-label="Close notifications"
+        ></button>
         <div
           class="absolute right-0 mt-2 w-80 sm:w-96 bg-white dark:bg-slate-800 rounded-lg shadow-xl border border-slate-200 dark:border-slate-700 overflow-hidden z-50 ring-1 ring-black ring-opacity-5"
         >
@@ -203,7 +210,14 @@
       </button>
 
       @if (showProfileMenu()) {
-        <div class="fixed inset-0 z-40 cursor-pointer" (click)="showProfileMenu.set(false)"></div>
+        <button
+          type="button"
+          class="fixed inset-0 z-40 cursor-pointer w-full h-full bg-transparent border-0"
+          (click)="showProfileMenu.set(false)"
+          (keyup.escape)="showProfileMenu.set(false)"
+          tabindex="-1"
+          aria-label="Close profile menu"
+        ></button>
         <div
           class="absolute right-0 mt-2 w-48 bg-white dark:bg-slate-800 rounded-lg shadow-lg border border-slate-200 dark:border-slate-700 py-1 z-50"
         >

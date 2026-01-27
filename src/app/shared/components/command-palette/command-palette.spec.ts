@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { CommandPaletteComponent } from './command-palette';
 import { Router } from '@angular/router';

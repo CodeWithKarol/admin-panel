@@ -1,6 +1,6 @@
 import { Injectable, signal } from '@angular/core';
 import { moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
-import { KanbanColumn, KanbanTask } from '../models/kanban.models';
+import { KanbanColumn } from '../models/kanban.models';
 
 @Injectable({
   providedIn: 'root',

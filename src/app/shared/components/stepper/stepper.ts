@@ -17,8 +17,9 @@ export interface Step {
           <li class="md:flex-1">
             <!-- Completed Step -->
             @if (isCompleted($index)) {
-              <a
-                class="group flex flex-col border-l-4 border-indigo-600 py-2 pl-4 hover:border-indigo-800 md:border-l-0 md:border-t-4 md:pl-0 md:pt-4 md:pb-0 cursor-pointer transition-colors"
+              <button
+                type="button"
+                class="group flex w-full text-left flex-col border-l-4 border-indigo-600 py-2 pl-4 hover:border-indigo-800 md:border-l-0 md:border-t-4 md:pl-0 md:pt-4 md:pb-0 cursor-pointer transition-colors bg-transparent"
                 (click)="onStepClick($index)"
               >
                 <span
@@ -29,12 +30,12 @@ export interface Step {
                 <span class="text-sm font-medium text-slate-900 dark:text-white mt-0.5">{{
                   step.label
                 }}</span>
-              </a>
+              </button>
             }
 
             <!-- Current Step -->
             @else if (isCurrent($index)) {
-              <a
+              <div
                 class="flex flex-col border-l-4 border-indigo-600 py-2 pl-4 md:border-l-0 md:border-t-4 md:pl-0 md:pt-4 md:pb-0"
                 aria-current="step"
               >
@@ -46,12 +47,12 @@ export interface Step {
                 <span class="text-sm font-medium text-slate-900 dark:text-white mt-0.5">{{
                   step.label
                 }}</span>
-              </a>
+              </div>
             }
 
             <!-- Pending Step -->
             @else {
-              <a
+              <div
                 class="group flex flex-col border-l-4 border-slate-200 dark:border-slate-700 py-2 pl-4 hover:border-slate-300 dark:hover:border-slate-600 md:border-l-0 md:border-t-4 md:pl-0 md:pt-4 md:pb-0 transition-colors"
               >
                 <span
@@ -63,7 +64,7 @@ export interface Step {
                   class="text-sm font-medium text-slate-500 dark:text-slate-400 group-hover:text-slate-700 dark:group-hover:text-slate-300 mt-0.5 transition-colors"
                   >{{ step.label }}</span
                 >
-              </a>
+              </div>
             }
           </li>
         }

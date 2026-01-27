@@ -1,7 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { CreateProjectPage } from './create-project-page';
 import { NotificationService } from '../../../../core/services/notification.service';
-import { By } from '@angular/platform-browser';
 import { vi, describe, it, expect, beforeEach } from 'vitest';
 
 describe('CreateProjectPage', () => {

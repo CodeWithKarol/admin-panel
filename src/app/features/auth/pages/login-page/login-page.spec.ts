@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { LoginPage } from './login-page';
 import { AuthService } from '../../../../core/auth/auth-service';
@@ -73,7 +74,7 @@ describe('LoginPage', () => {
 
     it('should handle login error and reset isLoading', () => {
       authServiceMock.login.mockReturnValue(throwError(() => new Error('Login failed')));
-      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => undefined);
 
       component.loginForm.setValue({ email: 'test@test.com', password: 'password' });
       component.onSubmit();

@@ -38,7 +38,14 @@
         <!-- Dropdown Menu -->
         @if (isFilterDropdownOpen()) {
           <!-- Backdrop -->
-          <div class="fixed inset-0 z-10" (click)="toggleFilterDropdown()"></div>
+          <button
+            type="button"
+            class="fixed inset-0 z-10 w-full h-full bg-transparent border-0"
+            (click)="toggleFilterDropdown()"
+            (keyup.escape)="toggleFilterDropdown()"
+            tabindex="-1"
+            aria-label="Close filters"
+          ></button>
 
           <div
             class="absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white dark:bg-slate-800 ring-1 ring-black/5 dark:ring-white/10 z-20 focus:outline-none border border-gray-100 dark:border-slate-700"
@@ -154,8 +161,8 @@
   @if (userToDelete()) {
     <app-delete-user-dialog
       [user]="userToDelete()!"
-      (confirm)="confirmDelete()"
-      (cancel)="cancelDelete()"
+      (confirmAction)="confirmDelete()"
+      (cancelAction)="cancelDelete()"
     />
   }
 </div>

@@ -1,10 +1,10 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 // @vitest-environment jsdom
 import { TestBed } from '@angular/core/testing';
-import { BrowserTestingModule, platformBrowserTesting } from '@angular/platform-browser/testing';
 import { Router } from '@angular/router';
 import { AuthService } from './auth-service';
 import { User } from '../models/user';
-import { describe, it, expect, beforeEach, afterEach, vi, beforeAll } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 
 const mockLocalStorage = (function () {
   let store: Record<string, string> = {};
@@ -50,7 +50,7 @@ describe('AuthService', () => {
     });
 
     service = TestBed.inject(AuthService);
-    routerSpy = TestBed.inject(Router) as any;
+    routerSpy = TestBed.inject(Router) as unknown as { navigate: ReturnType<typeof vi.fn> };
   });
 
   afterEach(() => {

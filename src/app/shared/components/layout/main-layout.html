@@ -5,10 +5,14 @@
   @if (layoutService.isSidebarOpen()) {
     <div class="fixed inset-0 z-50 md:hidden">
       <!-- Backdrop -->
-      <div
-        class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm transition-opacity cursor-pointer"
+      <button
+        type="button"
+        class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm transition-opacity cursor-pointer border-0 w-full h-full"
         (click)="layoutService.closeSidebar()"
-      ></div>
+        (keyup.escape)="layoutService.closeSidebar()"
+        tabindex="-1"
+        aria-label="Close sidebar"
+      ></button>
 
       <!-- Sidebar -->
       <app-sidebar
