@@ -1,0 +1,101 @@
+<div class="space-y-10">
+  <div class="flex flex-col md:flex-row md:items-end justify-between px-2 gap-6">
+    <div>
+      <h3 class="text-[10px] font-black uppercase tracking-[0.3em] text-brand-400 mb-2 flex items-center gap-2">
+        <span class="w-4 h-[1px] bg-brand-200"></span> Operational_Roadmap
+      </h3>
+      <h2 class="text-4xl lg:text-5xl font-black italic text-accent-charcoal tracking-tight">The Ledger.</h2>
+    </div>
+    <div class="flex items-center gap-6">
+      <div class="flex items-center gap-2">
+        <span class="w-2 h-2 rounded-full bg-accent-sage shadow-[0_0_8px_rgba(141,163,153,0.4)]"></span>
+        <span class="text-[10px] font-black uppercase tracking-widest text-brand-500">Resolved</span>
+      </div>
+      <div class="flex items-center gap-2">
+        <span class="w-2 h-2 rounded-full bg-accent-terracotta shadow-[0_0_8px_rgba(192,86,64,0.4)]"></span>
+        <span class="text-[10px] font-black uppercase tracking-widest text-brand-500">In_Progress</span>
+      </div>
+      <div class="flex gap-2 sm:ml-4">
+        <button class="p-2 border border-brand-200 hover:bg-brand-100 transition-all rounded-sm group" aria-label="Previous Month">
+          <lucide-icon [name]="ChevronLeft" class="w-4 h-4 text-brand-400 group-hover:text-accent-charcoal transition-colors"></lucide-icon>
+        </button>
+        <button class="p-2 border border-brand-200 hover:bg-brand-100 transition-all rounded-sm group" aria-label="Next Month">
+          <lucide-icon [name]="ChevronRight" class="w-4 h-4 text-brand-400 group-hover:text-accent-charcoal transition-colors"></lucide-icon>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Horizontal Scroll Ledger -->
+  <div class="relative overflow-x-auto scrollbar-hide pb-8 cursor-grab active:cursor-grabbing">
+    <div class="min-w-[1400px] space-y-1">
+      
+      <!-- Date Header -->
+      <div class="flex border-b border-brand-200 pb-6 mb-10">
+        @for (day of daysInMonth; track day) {
+          <div class="flex-1 text-center relative">
+            <span class="text-[10px] font-mono font-bold text-brand-300">{{ day }}</span>
+            @if (day % 7 === 0) {
+              <div class="absolute -bottom-6 left-1/2 -translate-x-1/2 text-[8px] font-black text-brand-400 uppercase tracking-tighter">Week_{{ day/7 }}</div>
+            }
+          </div>
+        }
+      </div>
+
+      <!-- Milestone Rows -->
+      <div class="relative h-80">
+        <!-- Background Grid Lines -->
+        <div class="absolute inset-0 flex">
+          @for (day of daysInMonth; track day) {
+            <div class="flex-1 border-l border-brand-100/30 h-full first:border-0 relative group/line">
+               <!-- Subtle hover vertical line highlight -->
+               <div class="absolute inset-0 bg-brand-100 opacity-0 group-hover/line:opacity-20 transition-opacity"></div>
+            </div>
+          }
+        </div>
+
+        <!-- Project Bars -->
+        <div class="relative space-y-10 pt-6">
+          @for (milestone of milestones(); track milestone.id) {
+            <div class="relative h-10 group cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-accent-terracotta/20 rounded" 
+                 (click)="openInspector(milestone)"
+                 (keydown.enter)="openInspector(milestone)"
+                 tabindex="0"
+                 role="button">
+              <!-- Positioned Bar -->
+              <div class="absolute h-full transition-all duration-700 ease-out group-hover:brightness-90 group-hover:translate-y-[-2px]"
+                   [style.left.%]="getOffset(milestone.startDate)"
+                   [style.width.%]="getWidth(milestone.startDate, milestone.endDate)"
+                   [ngClass]="milestone.status === 'complete' ? 'bg-accent-sage/20' : 'bg-accent-terracotta/10'">
+                
+                <!-- Left Accent Line -->
+                <div class="absolute top-0 left-0 w-[2px] h-full"
+                     [ngClass]="milestone.status === 'complete' ? 'bg-accent-sage' : 'bg-accent-terracotta'">
+                </div>
+
+                <!-- Label -->
+                <div class="absolute -top-8 left-0 whitespace-nowrap opacity-80 group-hover:opacity-100 transition-opacity">
+                  <span class="text-[11px] font-black uppercase tracking-[0.1em] text-accent-charcoal">
+                    {{ milestone.projectName }}
+                  </span>
+                  <span class="text-[9px] font-serif italic text-brand-500 ml-3 lowercase opacity-60">
+                    // {{ milestone.phase }}
+                  </span>
+                </div>
+
+                <!-- Hover Details Tooltip -->
+                <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+                   <span class="text-[8px] font-black text-white px-2 py-0.5 rounded-full" 
+                         [ngClass]="milestone.status === 'complete' ? 'bg-accent-sage' : 'bg-accent-terracotta'">
+                     {{ milestone.startDate | date:'MMM d' }} — {{ milestone.endDate | date:'MMM d' }}
+                   </span>
+                </div>
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

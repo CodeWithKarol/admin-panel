@@ -1,0 +1,556 @@
+<!-- Backdrop Overlay -->
+@if (isOpen()) {
+  <div
+    (click)="close()"
+    (keydown.escape)="close()"
+    tabindex="0"
+    role="button"
+    aria-label="Close panel"
+    class="fixed inset-0 bg-accent-charcoal/20 backdrop-blur-[2px] z-[60] animate-in fade-in duration-500 outline-none"
+  ></div>
+}
+
+<ng-template #alertModal>
+  <div class="space-y-6">
+    <div
+      class="p-4 bg-red-50 border border-red-200 rounded-sm text-red-800 text-sm font-serif italic"
+    >
+      "WARNING: You are about to initiate a strict deprovisioning sequence. This action cannot be
+      undone."
+    </div>
+
+    <div class="flex justify-end gap-4 pt-4 border-t border-brand-100">
+      <button
+        (click)="modalService.close()"
+        class="px-4 py-2 text-xs font-bold uppercase tracking-widest text-brand-500 hover:text-brand-800 transition-colors"
+      >
+        Cancel
+      </button>
+      <button
+        (click)="confirmDeprovision()"
+        class="px-6 py-2 bg-red-600 text-white text-xs font-black uppercase tracking-widest hover:bg-red-700 transition-colors shadow-lg shadow-red-600/20"
+      >
+        Confirm_Deprovision
+      </button>
+    </div>
+  </div>
+</ng-template>
+
+<!-- Sliding Panel -->
+<aside
+  [class.translate-x-0]="isOpen()"
+  [class.translate-x-full]="!isOpen()"
+  [class.shadow-[-20px_0_60px_-15px_rgba(0,0,0,0.1)]]="isOpen()"
+  class="fixed top-0 right-0 w-full sm:w-[500px] lg:w-[600px] h-full bg-brand-50 border-l border-brand-200 z-[70] transition-all duration-700 ease-in-out flex flex-col"
+>
+  <!-- Inspector Header -->
+  <div class="p-8 lg:p-10 border-b border-brand-200 flex items-center justify-between shrink-0">
+    <div>
+      <h3
+        class="text-[10px] font-black uppercase tracking-[0.3em] text-brand-400 mb-2 flex items-center gap-2"
+      >
+        <span class="w-4 h-[1px] bg-brand-200"></span>
+        Internal_Memo // {{ type()?.toUpperCase() }}
+      </h3>
+      <h2 class="text-3xl font-black italic text-accent-charcoal tracking-tight">Dossier.</h2>
+    </div>
+    <button
+      (click)="close()"
+      class="w-12 h-12 rounded-full border border-brand-200 flex items-center justify-center text-brand-400 hover:text-accent-charcoal hover:bg-brand-100 transition-all group"
+      aria-label="Close dossier"
+    >
+      <lucide-icon
+        [name]="X"
+        class="w-5 h-5 group-hover:rotate-90 transition-transform"
+      ></lucide-icon>
+    </button>
+  </div>
+
+  <!-- Dynamic Content Area -->
+  <div class="flex-1 overflow-y-auto p-8 lg:p-12 scrollbar-hide">
+    @if (data() || isCreating()) {
+      <div class="animate-in fade-in slide-in-from-bottom-4 duration-700 space-y-12">
+        <!-- User Dossier View -->
+        @if (type() === 'user') {
+          @if (isReconfiguring() || isCreating()) {
+            <app-user-form
+              [user]="isCreating() ? null : activeUser()"
+              (identityCommitted)="saveIdentity($event)"
+              (identityAborted)="isCreating() ? close() : toggleReconfigure()"
+            >
+            </app-user-form>
+          } @else {
+            <div class="space-y-12 animate-in fade-in duration-700">
+              <div class="flex items-center gap-8 text-left">
+                <img
+                  [src]="activeUser()?.avatar"
+                  class="w-24 h-24 rounded-3xl border-4 border-white shadow-2xl grayscale hover:grayscale-0 transition-all duration-700"
+                  alt=""
+                />
+                <div class="space-y-3 flex-1">
+                  <h3
+                    class="text-4xl font-black uppercase tracking-tighter w-full text-accent-charcoal"
+                  >
+                    {{ activeUser()?.name }}
+                  </h3>
+                  <div class="flex items-center gap-3">
+                    <p class="text-sm font-serif italic text-accent-terracotta">
+                      {{ activeUser()?.role }}
+                    </p>
+                    <span
+                      class="text-[8px] font-black px-2 py-0.5 bg-brand-100 text-brand-500 rounded-sm"
+                      >{{ activeUser()?.squad }}</span
+                    >
+                  </div>
+                </div>
+              </div>
+
+              <!-- Specialization Tags -->
+              <div class="flex flex-wrap gap-2">
+                @for (spec of activeUser()?.specializations; track $index) {
+                  <span
+                    class="text-[9px] font-black border border-brand-200 px-3 py-1 text-accent-charcoal uppercase tracking-widest bg-white"
+                  >
+                    #{{ spec }}
+                  </span>
+                }
+              </div>
+
+              <div class="grid grid-cols-2 gap-10 border-y border-brand-200 py-10">
+                <div class="space-y-2">
+                  <span class="text-[9px] font-black text-brand-400 uppercase tracking-widest"
+                    >Active_Status</span
+                  >
+                  <div class="flex items-center gap-2 text-left">
+                    <span
+                      class="w-2 h-2 rounded-full"
+                      [ngClass]="
+                        activeUser()?.status === 'online'
+                          ? 'bg-accent-sage shadow-[0_0_10px_rgba(141,163,153,0.5)]'
+                          : 'bg-brand-300'
+                      "
+                    ></span>
+                    <span
+                      class="text-sm font-bold text-accent-charcoal uppercase tracking-widest"
+                      >{{ activeUser()?.status }}</span
+                    >
+                  </div>
+                </div>
+                <div class="space-y-2 text-right">
+                  <span class="text-[9px] font-black text-brand-400 uppercase tracking-widest"
+                    >Operator_Email</span
+                  >
+                  <p class="text-sm font-mono text-accent-charcoal">
+                    {{ activeUser()?.id }}&#64;axon-core.net
+                  </p>
+                </div>
+              </div>
+
+              <div class="space-y-6 text-left">
+                <h5
+                  class="text-[10px] font-black text-brand-400 uppercase tracking-[0.2em] flex items-center gap-3"
+                >
+                  <span class="w-4 h-[1px] bg-brand-200"></span> Personnel_Bio
+                </h5>
+                <p class="text-lg font-serif text-brand-800 leading-relaxed italic">
+                  "{{
+                    activeUser()?.bio ||
+                      'Operator has not provided a detailed biological history for the central directory.'
+                  }}"
+                </p>
+              </div>
+
+              <!-- Workload Analytics (NEW) -->
+              <div class="space-y-6 text-left pt-6">
+                <h5
+                  class="text-[10px] font-black text-brand-400 uppercase tracking-[0.2em] flex items-center gap-3"
+                >
+                  <span class="w-4 h-[1px] bg-brand-200"></span> Operational_Workload_Audit
+                </h5>
+                <div
+                  class="grid grid-cols-3 gap-4 border border-brand-100 p-6 bg-white/50 rounded-sm"
+                >
+                  <div class="space-y-1">
+                    <span class="text-[8px] font-black text-brand-400 uppercase tracking-tighter"
+                      >Active_Tasks</span
+                    >
+                    <p class="text-2xl font-serif font-black text-accent-charcoal leading-none">
+                      {{ activeUser()?.activeTasks }}
+                    </p>
+                  </div>
+                  <div class="space-y-1 text-center border-x border-brand-100">
+                    <span class="text-[8px] font-black text-brand-400 uppercase tracking-tighter"
+                      >Completed</span
+                    >
+                    <p class="text-2xl font-serif font-black text-accent-terracotta leading-none">
+                      {{ activeUser()?.completedTasks }}
+                    </p>
+                  </div>
+                  <div class="space-y-1 text-right">
+                    <span class="text-[8px] font-black text-brand-400 uppercase tracking-tighter"
+                      >Velocity</span
+                    >
+                    <p class="text-2xl font-serif font-black text-accent-sage leading-none">84%</p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Activity Feed (NEW) -->
+              <div class="space-y-6 text-left pt-6 pb-12">
+                <h5
+                  class="text-[10px] font-black text-brand-400 uppercase tracking-[0.2em] flex items-center gap-3"
+                >
+                  <span class="w-4 h-[1px] bg-brand-200"></span> Recent_System_Interactions
+                </h5>
+                <div class="space-y-4 font-mono text-[10px] text-brand-600">
+                  <div class="flex gap-4 items-start border-l border-brand-200 pl-4 py-1">
+                    <span class="text-brand-300">10:42</span>
+                    <span class="uppercase font-bold text-accent-charcoal"
+                      >DEPL_PROD_AXON_CORE_SYNC // SUCCESS</span
+                    >
+                  </div>
+                  <div class="flex gap-4 items-start border-l border-brand-200 pl-4 py-1">
+                    <span class="text-brand-300">09:15</span>
+                    <span class="uppercase">RECONFIG_IDENTITY_MATRIX // INITIALIZED</span>
+                  </div>
+                  <div class="flex gap-4 items-start border-l border-brand-200 pl-4 py-1">
+                    <span class="text-brand-300">08:04</span>
+                    <span class="uppercase">SIGNAL_NODE_AUDIT_COMPLETE // NO_ERRORS</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="pt-8 space-y-4">
+                <button
+                  (click)="toggleReconfigure()"
+                  class="w-full py-4 border border-brand-200 text-xs font-black uppercase tracking-widest hover:bg-accent-charcoal hover:text-white transition-all duration-500"
+                >
+                  RECONFIGURE_IDENTITY
+                </button>
+                <button
+                  (click)="deprovisionIdentity(activeUser()!.id, alertModal)"
+                  class="w-full py-4 bg-brand-50 border border-brand-200 text-brand-400 text-xs font-black uppercase tracking-widest hover:bg-accent-terracotta hover:text-white hover:border-accent-terracotta transition-all duration-500 flex items-center justify-center gap-3 group"
+                >
+                  <lucide-icon
+                    [name]="Trash2"
+                    class="w-4 h-4 group-hover:scale-110 transition-transform"
+                  ></lucide-icon>
+                  DEPROVISION_IDENTITY
+                </button>
+              </div>
+            </div>
+          }
+        }
+
+        <!-- Milestone/Project Dossier View -->
+        @if (type() === 'milestone') {
+          @if (isReconfiguring() || isCreating()) {
+            <app-project-form
+              [project]="isCreating() ? null : activeMilestone()"
+              (save)="saveIdentity($event)"
+              (cancelClick)="isCreating() ? close() : toggleReconfigure()"
+            >
+            </app-project-form>
+          } @else {
+            <div class="space-y-12 animate-in fade-in duration-700">
+              <div class="space-y-4">
+                <div class="flex items-center gap-3">
+                  <span
+                    class="px-2 py-0.5 bg-accent-terracotta text-white text-[8px] font-black uppercase tracking-widest"
+                    >Confidential</span
+                  >
+                  <span
+                    class="text-[10px] font-mono font-bold text-brand-400 uppercase tracking-tighter italic"
+                    >Ref: {{ activeMilestone()?.id }}</span
+                  >
+                </div>
+                <h4
+                  class="text-5xl lg:text-6xl font-black text-accent-charcoal tracking-tighter uppercase leading-[0.85] break-words"
+                >
+                  {{ activeMilestone()?.projectName }}
+                </h4>
+                <p class="text-lg font-serif italic text-brand-500">Project_Briefing_v2.0</p>
+              </div>
+
+              <div class="pl-8 border-l-4 border-accent-terracotta/20 py-2">
+                <p
+                  class="text-2xl font-serif font-black text-accent-charcoal italic leading-relaxed text-balance text-left"
+                >
+                  "{{ activeMilestone()?.missionStatement }}"
+                </p>
+              </div>
+
+              <div class="space-y-6">
+                <h5
+                  class="text-[10px] font-black text-brand-400 uppercase tracking-[0.2em] flex items-center gap-3"
+                >
+                  <span class="w-4 h-[1px] bg-brand-200"></span> Operational_Status_Report
+                </h5>
+                <div class="editorial-card p-8 rounded-none border border-brand-200 bg-white">
+                  <p class="text-sm font-sans font-medium text-brand-800 leading-relaxed text-left">
+                    {{ activeMilestone()?.statusReport }}
+                  </p>
+                </div>
+              </div>
+
+              <div class="pt-8">
+                <div
+                  class="bg-[#fef9c3] p-8 shadow-xl border border-yellow-200 -rotate-1 relative group cursor-default max-w-sm ml-auto animate-in slide-in-from-right-8 duration-1000 delay-300"
+                >
+                  <div
+                    class="absolute -top-3 left-1/2 -translate-x-1/2 w-24 h-8 bg-white/20 blur-sm pointer-events-none"
+                  ></div>
+                  <h6 class="text-[9px] font-black text-yellow-700 uppercase tracking-widest mb-4">
+                    Internal_System_Note
+                  </h6>
+                  <p class="text-xs font-serif italic text-yellow-900 leading-relaxed text-left">
+                    {{ activeMilestone()?.internalNotes }}
+                  </p>
+                  <div class="mt-6 flex justify-end">
+                    <span
+                      class="text-[8px] font-black text-yellow-600/50 uppercase tracking-tighter"
+                      >Encrypted_Fragment_402</span
+                    >
+                  </div>
+                </div>
+              </div>
+
+              <div class="pt-8 space-y-4">
+                <button
+                  (click)="toggleReconfigure()"
+                  class="w-full py-4 border border-brand-200 text-xs font-black uppercase tracking-widest hover:bg-accent-charcoal hover:text-white transition-all duration-500"
+                >
+                  RECONFIGURE_PROTOCOL
+                </button>
+                <button
+                  (click)="deprovisionIdentity(activeMilestone()!.id, alertModal)"
+                  class="w-full py-4 bg-brand-50 border border-brand-200 text-brand-400 text-xs font-black uppercase tracking-widest hover:bg-accent-terracotta hover:text-white hover:border-accent-terracotta transition-all duration-500 flex items-center justify-center gap-3 group"
+                >
+                  <lucide-icon
+                    [name]="Trash2"
+                    class="w-4 h-4 group-hover:scale-110 transition-transform"
+                  ></lucide-icon>
+                  DEPROVISION_PROTOCOL
+                </button>
+              </div>
+            </div>
+          }
+        }
+
+        <!-- Metric Dossier View -->
+        @if (type() === 'metric') {
+          <div class="space-y-12">
+            <div class="space-y-2">
+              <h4
+                class="text-5xl font-black text-accent-charcoal tracking-tighter uppercase leading-none"
+              >
+                {{ activeMetric()?.label }}
+              </h4>
+              <p class="text-sm font-serif italic text-brand-500">30-Day Performance Audit</p>
+            </div>
+
+            <div class="space-y-6">
+              <h5
+                class="text-[10px] font-black text-brand-400 uppercase tracking-[0.2em] flex items-center gap-3"
+              >
+                <span class="w-4 h-[1px] bg-brand-200"></span> Visual_Trend_Analysis
+              </h5>
+              <div class="h-64 w-full bg-white border border-brand-100 p-6 shadow-sm">
+                <canvas
+                  baseChart
+                  [data]="lineChartData()"
+                  [options]="lineChartOptions"
+                  [type]="lineChartType"
+                >
+                </canvas>
+              </div>
+            </div>
+
+            <div class="space-y-8">
+              <h5
+                class="text-[10px] font-black text-brand-400 uppercase tracking-[0.2em] flex items-center gap-3"
+              >
+                <span class="w-4 h-[1px] bg-brand-200"></span> Notable_Deviations
+              </h5>
+              <div class="space-y-6">
+                <div class="flex items-start gap-6 pb-6 border-b border-brand-100 last:border-0">
+                  <div
+                    class="w-10 h-10 rounded-full bg-brand-100 flex items-center justify-center shrink-0"
+                  >
+                    <lucide-icon [name]="TrendingUp" class="w-4 h-4 text-accent-sage"></lucide-icon>
+                  </div>
+                  <div>
+                    <p class="text-sm font-bold text-accent-charcoal uppercase tracking-tight mb-1">
+                      Feb 14 // OPTIMIZATION_SPIKE
+                    </p>
+                    <p
+                      class="text-[11px] font-mono text-brand-500 leading-relaxed uppercase tracking-tight"
+                    >
+                      System throughput increased by 8.2% following core refactor deployment.
+                    </p>
+                  </div>
+                </div>
+                <div class="flex items-start gap-6 pb-6 border-b border-brand-100 last:border-0">
+                  <div
+                    class="w-10 h-10 rounded-full bg-brand-100 flex items-center justify-center shrink-0"
+                  >
+                    <lucide-icon
+                      [name]="Activity"
+                      class="w-4 h-4 text-accent-terracotta"
+                    ></lucide-icon>
+                  </div>
+                  <div>
+                    <p class="text-sm font-bold text-accent-charcoal uppercase tracking-tight mb-1">
+                      Feb 08 // RESOURCE_CONTENTION
+                    </p>
+                    <p
+                      class="text-[11px] font-mono text-brand-500 leading-relaxed uppercase tracking-tight"
+                    >
+                      Minor latency detected during global node synchronization event.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        }
+
+        <!-- Sector Audit View -->
+        @if (type() === 'sector') {
+          <div class="space-y-12">
+            <div class="space-y-4">
+              <div class="flex items-center gap-3">
+                <span
+                  class="px-2 py-0.5 bg-accent-charcoal text-white text-[8px] font-black uppercase tracking-widest"
+                  >Audit_Log</span
+                >
+                <span
+                  class="text-[10px] font-mono font-bold text-brand-400 uppercase tracking-tighter italic"
+                  >Ref: {{ activeSector()?.name }}</span
+                >
+              </div>
+              <h4
+                class="text-6xl font-black text-accent-charcoal tracking-tighter uppercase leading-[0.85]"
+              >
+                {{ activeSector()?.name }}
+              </h4>
+              <p class="text-lg font-serif italic text-brand-500">Comparative_Sector_Audit</p>
+            </div>
+
+            <!-- Radar Chart -->
+            <div class="space-y-6">
+              <h5
+                class="text-[10px] font-black text-brand-400 uppercase tracking-[0.2em] flex items-center gap-3"
+              >
+                <span class="w-4 h-[1px] bg-brand-200"></span> Multidimensional_Audit_Metrics
+              </h5>
+              <div class="h-80 w-full bg-white border border-brand-100 p-8 shadow-sm">
+                <canvas
+                  baseChart
+                  [data]="radarChartData()"
+                  [options]="radarChartOptions"
+                  [type]="radarChartType"
+                >
+                </canvas>
+              </div>
+            </div>
+
+            <!-- Benchmarking Ledger -->
+            <div class="space-y-8">
+              <h5
+                class="text-[10px] font-black text-brand-400 uppercase tracking-[0.2em] flex items-center gap-3"
+              >
+                <span class="w-4 h-[1px] bg-brand-200"></span> Benchmarking_Ledger
+              </h5>
+
+              <div class="overflow-hidden border border-brand-200 bg-white">
+                <table class="w-full text-left border-collapse">
+                  <thead class="bg-brand-50 border-b border-brand-200">
+                    <tr>
+                      <th
+                        class="px-6 py-4 text-[9px] font-black text-brand-400 uppercase tracking-widest"
+                      >
+                        Metric
+                      </th>
+                      <th
+                        class="px-6 py-4 text-[9px] font-black text-brand-400 uppercase tracking-widest text-right"
+                      >
+                        Sector
+                      </th>
+                      <th
+                        class="px-6 py-4 text-[9px] font-black text-brand-400 uppercase tracking-widest text-right"
+                      >
+                        Avg
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody class="divide-y divide-brand-100">
+                    @for (dim of sectorAudit()?.dimensions; let i = $index; track $index) {
+                      <tr class="hover:bg-brand-50 transition-colors">
+                        <td
+                          class="px-6 py-4 text-[11px] font-black text-accent-charcoal uppercase tracking-tight"
+                        >
+                          {{ dim }}
+                        </td>
+                        <td
+                          class="px-6 py-4 text-[11px] font-mono font-bold text-accent-terracotta text-right"
+                        >
+                          {{ sectorAudit()?.sectorValues?.[i] }}%
+                        </td>
+                        <td class="px-6 py-4 text-[11px] font-mono text-brand-400 text-right">
+                          {{ sectorAudit()?.orgAverage?.[i] }}%
+                        </td>
+                      </tr>
+                    }
+                  </tbody>
+                </table>
+              </div>
+
+              <!-- Analyst Note -->
+              <div class="p-6 bg-brand-100/50 border-l-2 border-accent-charcoal">
+                <div class="flex items-center gap-3 mb-3">
+                  <lucide-icon
+                    [name]="ShieldCheck"
+                    class="w-4 h-4 text-accent-charcoal"
+                  ></lucide-icon>
+                  <span
+                    class="text-[10px] font-black uppercase tracking-widest text-accent-charcoal"
+                    >Analyst_Brief</span
+                  >
+                </div>
+                <p class="text-xs font-serif italic text-brand-800 leading-relaxed text-left">
+                  The current audit indicates that {{ activeSector()?.name }} is outperforming the
+                  organizational average in
+                  <span class="font-bold text-accent-charcoal">efficiency</span> but remains
+                  slightly below the baseline for
+                  <span class="font-bold text-accent-charcoal">innovation</span>. Recommend
+                  cross-sector knowledge synchronization.
+                </p>
+              </div>
+            </div>
+          </div>
+        }
+
+        <!-- Other types placeholder -->
+        @if (
+          type() !== 'user' && type() !== 'metric' && type() !== 'milestone' && type() !== 'sector'
+        ) {
+          <pre
+            class="text-[10px] font-mono text-brand-400 uppercase tracking-widest leading-relaxed"
+          >
+            Initializing_Data_Link...
+            Target: {{ activeMilestone()?.projectName || 'Telemetric_Stream' }}
+            Status: Awaiting_Dossier_Template
+          </pre>
+        }
+      </div>
+    }
+  </div>
+
+  <!-- Editorial Footer -->
+  <div class="p-8 border-t border-brand-100 bg-white shrink-0">
+    <p class="text-[9px] font-serif italic text-brand-300 text-center uppercase tracking-[0.2em]">
+      End of Dispatch // Axon Editorial Intelligence
+    </p>
+  </div>
+</aside>
