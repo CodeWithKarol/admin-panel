@@ -1,4 +1,4 @@
-import { Component, inject, signal, computed } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
@@ -120,26 +120,13 @@ export class ProjectsComponent {
   private analyticsService = inject(AnalyticsService);
   private inspector = inject(InspectorService);
 
-  searchQuery = signal('');
-  statusFilter = signal('all');
+  searchQuery = this.milestoneService.searchQuery;
+  statusFilter = this.milestoneService.statusFilter;
 
   milestones = this.milestoneService.milestones;
+  filteredMilestones = this.milestoneService.filteredMilestones;
   lastUpdated = this.analyticsService.lastUpdated;
   isRefreshing = this.analyticsService.isRefreshing;
-
-  filteredMilestones = computed(() => {
-    const query = this.searchQuery().toLowerCase();
-    const filter = this.statusFilter();
-
-    return this.milestones().filter((m) => {
-      const matchesSearch =
-        m.projectName.toLowerCase().includes(query) ||
-        (m.missionStatement?.toLowerCase() || '').includes(query);
-      const matchesFilter = filter === 'all' || m.status === filter;
-
-      return matchesSearch && matchesFilter;
-    });
-  });
 
   protected readonly Grid = Grid;
   protected readonly List = List;

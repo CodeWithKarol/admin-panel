@@ -26,3 +26,10 @@ export interface ActivityLog {
   status: 'success' | 'info' | 'warning';
   scope: 'task' | 'project' | 'system';
 }
+export type TeamMemberStatus = 'online' | 'busy' | 'offline';
+
+export const STATUS_COLORS: Record<TeamMemberStatus, string> = {
+  online: 'bg-accent-sage shadow-[0_0_8px_rgba(111,130,111,0.5)]',
+  busy: 'bg-accent-terracotta shadow-[0_0_8px_rgba(192,86,64,0.5)]',
+  offline: 'bg-brand-300',
+};

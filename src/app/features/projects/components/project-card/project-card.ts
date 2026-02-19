@@ -1,7 +1,10 @@
 import { Component, input, output, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ProjectMilestone } from '../../../../core/services/milestone/milestone.service';
+import { PROJECT_STATUS_COLORS } from '../../../../core/models/milestone.models';
 import { LucideAngularModule, Activity, Calendar, ArrowUpRight, BarChart } from 'lucide-angular';
+import { MilestoneService } from '../../../../core/services/milestone/milestone.service';
+import { inject } from '@angular/core';
 
 @Component({
   selector: 'app-project-card',
@@ -23,15 +26,7 @@ import { LucideAngularModule, Activity, Calendar, ArrowUpRight, BarChart } from 
           >
             {{ project().status }}
           </span>
-          <div
-            class="w-2 h-2 rounded-full"
-            [ngClass]="{
-              'bg-accent-sage shadow-[0_0_8px_rgba(111,130,111,0.6)]':
-                project().status === 'active',
-              'bg-accent-terracotta': project().status === 'complete',
-              'bg-brand-300': project().status === 'upcoming',
-            }"
-          ></div>
+          <div class="w-2 h-2 rounded-full" [ngClass]="getStatusColor(project().status)"></div>
         </div>
       </div>
 
@@ -99,19 +94,16 @@ export class ProjectCardComponent {
   project = input.required<ProjectMilestone>();
   cardClick = output<ProjectMilestone>();
 
+  private milestoneService = inject(MilestoneService);
+
   protected readonly Activity = Activity;
   protected readonly Calendar = Calendar;
   protected readonly ArrowUpRight = ArrowUpRight;
   protected readonly BarChart = BarChart;
 
-  progress = computed(() => {
-    const start = this.project().startDate.getTime();
-    const end = this.project().endDate.getTime();
-    const now = new Date().getTime();
+  progress = computed(() => this.milestoneService.calculateProgress(this.project()));
 
-    if (now < start) return 0;
-    if (now > end) return 100;
-
-    return Math.round(((now - start) / (end - start)) * 100);
-  });
+  getStatusColor(status: ProjectMilestone['status']) {
+    return PROJECT_STATUS_COLORS[status] || 'bg-brand-200';
+  }
 }

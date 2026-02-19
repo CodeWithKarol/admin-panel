@@ -1,16 +1,57 @@
 import { Injectable, signal, computed } from '@angular/core';
 import { TeamMember, ProjectMetric } from '../../models/analytics.models';
 import { DispatchEntry } from '../../models/dispatch.models';
+import { SQUADS } from '../../models/team.constants';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AnalyticsService {
   teamMembers = signal<TeamMember[]>([
-    { id: '1', name: 'Alex Rivera', role: 'Lead Developer', squad: 'AXON_CORE', specializations: ['RUST', 'SIGNAL_ARCH', 'K8S'], avatar: 'https://i.pravatar.cc/150?u=1', status: 'online', activeTasks: 5, completedTasks: 120 },
-    { id: '2', name: 'Sarah Chen', role: 'UX Designer', squad: 'UI_UX_INTEL', specializations: ['MOTION', 'BENTO_GRID', 'TYPOGRAPHY'], avatar: 'https://i.pravatar.cc/150?u=2', status: 'online', activeTasks: 3, completedTasks: 85 },
-    { id: '3', name: 'Mike Johnson', role: 'Product Manager', squad: 'OPS_EDGE', specializations: ['STRATEGY', 'RISK_MGMT', 'AGILE'], avatar: 'https://i.pravatar.cc/150?u=3', status: 'busy', activeTasks: 8, completedTasks: 210 },
-    { id: '4', name: 'Emily Davis', role: 'QA Engineer', squad: 'QA_STRIKE', specializations: ['AUTOMATION', 'STRESS_TEST', 'CI_CD'], avatar: 'https://i.pravatar.cc/150?u=4', status: 'offline', activeTasks: 0, completedTasks: 150 }
+    {
+      id: '1',
+      name: 'Alex Rivera',
+      role: 'Lead Developer',
+      squad: 'AXON_CORE',
+      specializations: ['RUST', 'SIGNAL_ARCH', 'K8S'],
+      avatar: 'https://i.pravatar.cc/150?u=1',
+      status: 'online',
+      activeTasks: 5,
+      completedTasks: 120,
+    },
+    {
+      id: '2',
+      name: 'Sarah Chen',
+      role: 'UX Designer',
+      squad: 'UI_UX_INTEL',
+      specializations: ['MOTION', 'BENTO_GRID', 'TYPOGRAPHY'],
+      avatar: 'https://i.pravatar.cc/150?u=2',
+      status: 'online',
+      activeTasks: 3,
+      completedTasks: 85,
+    },
+    {
+      id: '3',
+      name: 'Mike Johnson',
+      role: 'Product Manager',
+      squad: 'OPS_EDGE',
+      specializations: ['STRATEGY', 'RISK_MGMT', 'AGILE'],
+      avatar: 'https://i.pravatar.cc/150?u=3',
+      status: 'busy',
+      activeTasks: 8,
+      completedTasks: 210,
+    },
+    {
+      id: '4',
+      name: 'Emily Davis',
+      role: 'QA Engineer',
+      squad: 'QA_STRIKE',
+      specializations: ['AUTOMATION', 'STRESS_TEST', 'CI_CD'],
+      avatar: 'https://i.pravatar.cc/150?u=4',
+      status: 'offline',
+      activeTasks: 0,
+      completedTasks: 150,
+    },
   ]);
 
   // Filtering & Sorting State
@@ -19,37 +60,53 @@ export class AnalyticsService {
   activeStatusFilter = signal<'ALL' | 'ACTIVE_ONLY' | 'HIGH_LOAD'>('ALL');
   sortBy = signal<'NAME' | 'IMPACT' | 'BURDEN'>('NAME');
 
+  readonly sortOptions = [
+    { label: 'Name', value: 'NAME' as const },
+    { label: 'Impact', value: 'IMPACT' as const },
+    { label: 'Burden', value: 'BURDEN' as const },
+  ];
+
+  readonly statusFilters = [
+    { label: 'All', value: 'ALL' as const },
+    { label: 'Active_Only', value: 'ACTIVE_ONLY' as const },
+    { label: 'High_Load', value: 'HIGH_LOAD' as const },
+  ];
+
   filteredMembers = computed(() => {
     let members = this.teamMembers();
 
     // 1. Squad Filter
     if (this.activeSquad()) {
-      members = members.filter(m => m.squad === this.activeSquad());
+      members = members.filter((m) => m.squad === this.activeSquad());
     }
 
     // 2. Operational Filter
     if (this.activeStatusFilter() === 'ACTIVE_ONLY') {
-      members = members.filter(m => m.status !== 'offline');
+      members = members.filter((m) => m.status !== 'offline');
     } else if (this.activeStatusFilter() === 'HIGH_LOAD') {
-      members = members.filter(m => m.activeTasks > 5);
+      members = members.filter((m) => m.activeTasks > 5);
     }
 
     // 3. Search Query
     const query = this.searchQuery().toLowerCase();
     if (query) {
-      members = members.filter(m => 
-        m.name.toLowerCase().includes(query) || 
-        m.role.toLowerCase().includes(query) ||
-        m.specializations.some(s => s.toLowerCase().includes(query))
+      members = members.filter(
+        (m) =>
+          m.name.toLowerCase().includes(query) ||
+          m.role.toLowerCase().includes(query) ||
+          m.specializations.some((s) => s.toLowerCase().includes(query)),
       );
     }
 
     // 4. Sorting
     return [...members].sort((a, b) => {
       switch (this.sortBy()) {
-        case 'IMPACT': return b.completedTasks - a.completedTasks;
-        case 'BURDEN': return b.activeTasks - a.activeTasks;
-        default: return a.name.localeCompare(b.name);
+        case 'IMPACT':
+          return b.completedTasks - a.completedTasks;
+        case 'BURDEN':
+          return b.activeTasks - a.activeTasks;
+        default:
+          return a.name.localeCompare(b.name);
       }
     });
   });
@@ -58,28 +115,40 @@ export class AnalyticsService {
   readinessScore = computed(() => {
     const total = this.teamMembers().length;
     if (total === 0) return 0;
-    const online = this.teamMembers().filter(m => m.status === 'online').length;
+    const online = this.teamMembers().filter((m) => m.status === 'online').length;
     return Math.round((online / total) * 100);
   });
 
   availabilityMatrix = computed(() => {
     const members = this.teamMembers();
     return {
-      online: members.filter(m => m.status === 'online').length,
-      busy: members.filter(m => m.status === 'busy').length,
-      offline: members.filter(m => m.status === 'offline').length,
+      online: members.filter((m) => m.status === 'online').length,
+      busy: members.filter((m) => m.status === 'busy').length,
+      offline: members.filter((m) => m.status === 'offline').length,
     };
   });
 
   metrics = signal<ProjectMetric[]>([
     { label: 'Total Tasks', value: 124, change: 12, trend: 'up' },
     { label: 'Team Velocity', value: 42, change: -5, trend: 'down' },
-    { label: 'Active Projects', value: 8, change: 0, trend: 'neutral' }
+    { label: 'Active Projects', value: 8, change: 0, trend: 'neutral' },
   ]);
 
   activities = signal<DispatchEntry[]>([
-    { id: '1', timestamp: new Date(), sender: 'SYSTEM', message: 'CORE_ENGINE_INITIALIZED_SUCCESSFULLY', type: 'SYSTEM' },
-    { id: '2', timestamp: new Date(), sender: 'ALEX_R', message: 'SYNC_UPSTREAM_COMPLETED_ON_NODE_04', type: 'ROUTINE' }
+    {
+      id: '1',
+      timestamp: new Date(),
+      sender: 'SYSTEM',
+      message: 'CORE_ENGINE_INITIALIZED_SUCCESSFULLY',
+      type: 'SYSTEM',
+    },
+    {
+      id: '2',
+      timestamp: new Date(),
+      sender: 'ALEX_R',
+      message: 'SYNC_UPSTREAM_COMPLETED_ON_NODE_04',
+      type: 'ROUTINE',
+    },
   ]);
 
   lastUpdated = signal<Date>(new Date());
@@ -89,50 +158,172 @@ export class AnalyticsService {
     this.startSimulation();
   }
 
-    totalCompletedTasks = computed(() =>
-      this.teamMembers().reduce((sum, member) => sum + member.completedTasks, 0)
+  totalCompletedTasks = computed(() =>
+    this.teamMembers().reduce((sum, member) => sum + member.completedTasks, 0),
+  );
+
+  squadMetrics = computed(() => {
+    const members = this.teamMembers();
+    const squads = new Map<string, { count: number; velocity: number; activeTasks: number }>();
+
+    members.forEach((m) => {
+      if (!squads.has(m.squad)) {
+        squads.set(m.squad, { count: 0, velocity: 0, activeTasks: 0 });
+      }
+      const data = squads.get(m.squad)!;
+      data.count++;
+      data.velocity += m.completedTasks;
+      data.activeTasks += m.activeTasks;
+    });
+
+    return Array.from(squads.entries())
+      .map(([name, data]) => ({
+        name,
+        count: data.count,
+        personnel: Array(data.count).fill(0),
+        velocity: data.velocity,
+        strain: data.count ? data.activeTasks / data.count : 0,
+      }))
+      .sort((a, b) => b.strain - a.strain);
+  });
+
+  dashboardInsight = computed(() => {
+    const velocity = this.metrics().find((m) => m.label === 'Team Velocity');
+    if (velocity) {
+      const direction = velocity.change >= 0 ? 'increased' : 'decreased';
+      return {
+        prefix: `Team velocity has ${direction} by`,
+        value: `${Math.abs(velocity.change)}%`,
+        suffix:
+          'this cycle. Read on for a detailed breakdown of operational efficiency and personnel allocation.',
+      };
+    }
+
+    // Fallback if velocity metric is missing
+    const totalTasks = this.teamMembers().reduce((acc, m) => acc + m.activeTasks, 0);
+    return {
+      prefix: 'Current system load is',
+      value: `${totalTasks} Active Tasks`,
+      suffix: 'distributed across the operational roster.',
+    };
+  });
+
+  updateTeamMember(updatedMember: TeamMember) {
+    this.teamMembers.update((members) =>
+      members.map((m) => (m.id === updatedMember.id ? updatedMember : m)),
     );
-  
-      updateTeamMember(updatedMember: TeamMember) {
-        this.teamMembers.update(members => 
-          members.map(m => m.id === updatedMember.id ? updatedMember : m)
-        );
-        
-        // Log the reconfiguration activity
-        this.activities.update(current => [{
+
+    // Log the reconfiguration activity
+    this.activities.update((current) =>
+      [
+        {
           id: Math.random().toString(36).substr(2, 9),
           timestamp: new Date(),
           sender: 'SYSTEM',
           message: `IDENTITY_RECONFIGURED_FOR_OPERATOR_${updatedMember.id}`,
-          type: 'SYSTEM' as const
-        }, ...current].slice(0, 20));
-      }
-    
-      addTeamMember(newMember: TeamMember) {
-        this.teamMembers.update(members => [newMember, ...members]);
-        
-        // Log initialization activity
-        this.activities.update(current => [{
+          type: 'SYSTEM' as const,
+        },
+        ...current,
+      ].slice(0, 20),
+    );
+  }
+
+  getMemberDossier(member: TeamMember): TeamMember & { bio: string } {
+    return {
+      ...member,
+      bio:
+        member.bio ||
+        `Lead architect specializing in high-frequency data pipelines. Instrumental in the recent AXON_CORE synchronization event. Known for surgical precision in code refactoring.`,
+    };
+  }
+
+  generateAvatarUrl(): string {
+    const seed = Math.floor(Math.random() * 900) + 100;
+    return `https://i.pravatar.cc/150?u=${seed}`;
+  }
+
+  createTeamMember(data: Partial<TeamMember> & { specInput?: string }): TeamMember {
+    const specs = data.specInput
+      ? data.specInput
+          .split(',')
+          .map((s) => s.trim().toUpperCase())
+          .filter((s) => s !== '')
+      : [];
+
+    const seedMatch = data.avatar?.match(/u=(\d+)/);
+    const id = seedMatch ? seedMatch[1] : (Math.floor(Math.random() * 900) + 100).toString();
+
+    return {
+      id,
+      name: data.name || 'Unknown Operator',
+      role: data.role || 'Unassigned',
+      squad: data.squad || SQUADS[0],
+      status: data.status || 'offline',
+      avatar: data.avatar || this.generateAvatarUrl(),
+      specializations: specs,
+      activeTasks: data.activeTasks || 0,
+      completedTasks: data.completedTasks || 0,
+      bio: data.bio,
+    };
+  }
+
+  prepareUpdate(
+    existing: TeamMember,
+    { specInput, ...updates }: Partial<TeamMember> & { specInput?: string },
+  ): TeamMember {
+    const specs = specInput
+      ? specInput
+          .split(',')
+          .map((s) => s.trim().toUpperCase())
+          .filter((s) => s !== '')
+      : existing.specializations;
+
+    return {
+      ...existing,
+      ...updates,
+      specializations: specs,
+      squad: updates.squad || existing.squad,
+      avatar: updates.avatar || existing.avatar,
+    };
+  }
+
+  addTeamMember(newMember: TeamMember) {
+    this.teamMembers.update((members) => [newMember, ...members]);
+
+    // Log initialization activity
+    this.activities.update((current) =>
+      [
+        {
           id: Math.random().toString(36).substr(2, 9),
           timestamp: new Date(),
           sender: 'SYSTEM',
           message: `NEW_IDENTITY_INITIALIZED_ID_${newMember.id}`,
-          type: 'SYSTEM' as const
-        }, ...current].slice(0, 20));
-      }
+          type: 'SYSTEM' as const,
+        },
+        ...current,
+      ].slice(0, 20),
+    );
+  }
 
-      deprovisionTeamMember(id: string) {
-        this.teamMembers.update(members => members.filter(m => m.id !== id));
-        
-        // Log deprovisioning activity
-        this.activities.update(current => [{
+  deprovisionTeamMember(id: string) {
+    this.teamMembers.update((members) => members.filter((m) => m.id !== id));
+
+    // Log deprovisioning activity
+    this.activities.update((current) =>
+      [
+        {
           id: Math.random().toString(36).substr(2, 9),
           timestamp: new Date(),
           sender: 'SECURITY',
           message: `IDENTITY_DEPROVISIONED_ID_${id}`,
-          type: 'URGENT' as const
-        }, ...current].slice(0, 20));
-      }    getMetricHistory(label: string) {    let current = 50;
+          type: 'URGENT' as const,
+        },
+        ...current,
+      ].slice(0, 20),
+    );
+  }
+  getMetricHistory(label: string) {
+    let current = 50;
     if (label.includes('Tasks')) current = 100;
     if (label.includes('Velocity')) current = 40;
     if (label.includes('Projects')) current = 5;
@@ -142,7 +333,7 @@ export class AnalyticsService {
       if (current < 0) current = 0;
       return {
         date: new Date(2026, 1, i + 1),
-        value: current
+        value: current,
       };
     });
   }
@@ -153,20 +344,20 @@ export class AnalyticsService {
     return {
       dimensions: ['Velocity', 'Quality', 'Efficiency', 'Innovation', 'Stability'],
       sectorValues: [
-        70 + (seed % 25), 
-        65 + (seed * 2 % 30), 
-        75 + (seed % 20), 
-        60 + (seed * 3 % 35), 
-        80 - (seed % 15)
+        70 + (seed % 25),
+        65 + ((seed * 2) % 30),
+        75 + (seed % 20),
+        60 + ((seed * 3) % 35),
+        80 - (seed % 15),
       ],
-      orgAverage: [75, 72, 78, 70, 74]
+      orgAverage: [75, 72, 78, 70, 74],
     };
   }
 
   private startSimulation() {
     setInterval(() => {
       this.spawnRandomDispatch();
-    }, 12000); 
+    }, 12000);
   }
 
   private spawnRandomDispatch() {
@@ -178,7 +369,7 @@ export class AnalyticsService {
       'MERGE_REQUEST_APPROVED_FOR_AXON_CORE',
       'DATABASE_REPLICATION_COMPLETED',
       'SECURITY_PROTOCOL_ALPHA_ACTIVE',
-      'REQUISITION_FOR_RESOURCES_PENDING'
+      'REQUISITION_FOR_RESOURCES_PENDING',
     ];
     const types: ('URGENT' | 'ROUTINE' | 'SYSTEM')[] = ['URGENT', 'ROUTINE', 'SYSTEM'];
 
@@ -187,12 +378,12 @@ export class AnalyticsService {
       timestamp: new Date(),
       sender: senders[Math.floor(Math.random() * senders.length)],
       message: messages[Math.floor(Math.random() * messages.length)],
-      type: types[Math.floor(Math.random() * types.length)]
+      type: types[Math.floor(Math.random() * types.length)],
     };
 
-    this.activities.update(current => {
+    this.activities.update((current) => {
       const updated = [newDispatch, ...current];
-      return updated.slice(0, 20); 
+      return updated.slice(0, 20);
     });
   }
 
@@ -201,10 +392,12 @@ export class AnalyticsService {
     setTimeout(() => {
       this.lastUpdated.set(new Date());
       this.isRefreshing.set(false);
-      this.metrics.update(m => m.map(metric => ({
-        ...metric,
-        value: metric.value + Math.floor(Math.random() * 5) - 2
-      })));
+      this.metrics.update((m) =>
+        m.map((metric) => ({
+          ...metric,
+          value: metric.value + Math.floor(Math.random() * 5) - 2,
+        })),
+      );
       this.spawnRandomDispatch();
     }, 1000);
   }

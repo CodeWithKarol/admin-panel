@@ -1,7 +1,10 @@
-import { Component, input, output, OnInit } from '@angular/core';
+import { Component, input, output, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ProjectMilestone } from '../../../../core/services/milestone/milestone.service';
+import {
+  ProjectMilestone,
+  MilestoneService,
+} from '../../../../core/services/milestone/milestone.service';
 import { LucideAngularModule, Save, X, Calendar } from 'lucide-angular';
 
 @Component({
@@ -216,6 +219,8 @@ export class ProjectFormComponent implements OnInit {
   save = output<ProjectMilestone>();
   cancelClick = output<void>();
 
+  private milestoneService = inject(MilestoneService);
+
   protected readonly Save = Save;
   protected readonly X = X;
   protected readonly Calendar = Calendar;
@@ -239,8 +244,7 @@ export class ProjectFormComponent implements OnInit {
   }
 
   formatDate(date: Date): string {
-    if (!date) return '';
-    return new Date(date).toISOString().split('T')[0];
+    return this.milestoneService.formatDateForInput(date);
   }
 
   updateDate(field: 'startDate' | 'endDate', value: string) {
@@ -248,17 +252,7 @@ export class ProjectFormComponent implements OnInit {
   }
 
   submit() {
-    const finalData: ProjectMilestone = {
-      id: this.project()?.id || Math.random().toString(36).substring(7),
-      projectName: this.formData.projectName || 'UNNAMED_PROTOCOL',
-      phase: this.formData.phase || 'Research',
-      status: this.formData.status || 'active',
-      startDate: this.formData.startDate || new Date(),
-      endDate: this.formData.endDate || new Date(),
-      missionStatement: this.formData.missionStatement || '',
-      statusReport: this.formData.statusReport || '',
-      internalNotes: this.formData.internalNotes || '',
-    };
+    const finalData = this.milestoneService.prepareMilestone(this.formData, this.project()?.id);
     this.save.emit(finalData);
   }
 }

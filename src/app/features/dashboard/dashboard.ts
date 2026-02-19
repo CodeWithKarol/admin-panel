@@ -12,6 +12,7 @@ import { DashboardHeaderComponent } from './components/dashboard-header/dashboar
 import { DispatchDeskComponent } from './components/dispatch-desk/dispatch-desk';
 import { SquadronMatrixComponent } from './components/squadron-matrix/squadron-matrix';
 import { InspectorService } from '../../core/services/inspector/inspector.service';
+import { BroadcastService } from '../../core/services/broadcast/broadcast.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -32,6 +33,7 @@ import { InspectorService } from '../../core/services/inspector/inspector.servic
 export class DashboardComponent {
   private analyticsService = inject(AnalyticsService);
   private inspector = inject(InspectorService);
+  private broadcastService = inject(BroadcastService);
   protected modalService = inject(ModalService);
 
   protected readonly Radio = Radio;
@@ -40,6 +42,7 @@ export class DashboardComponent {
   teamMembers = this.analyticsService.teamMembers;
   lastUpdated = this.analyticsService.lastUpdated;
   isRefreshing = this.analyticsService.isRefreshing;
+  dashboardInsight = this.analyticsService.dashboardInsight;
 
   refresh() {
     this.analyticsService.refreshData();
@@ -53,42 +56,11 @@ export class DashboardComponent {
   }
 
   confirmBroadcast() {
-    this.analyticsService.activities.update((current) => [
-      {
-        id: Math.random().toString(36).substr(2, 9),
-        timestamp: new Date(),
-        sender: 'COMMAND_OVERRIDE',
-        message: 'GLOBAL_PRIORITY_BROADCAST_INITIATED',
-        type: 'URGENT',
-      },
-      ...current,
-    ]);
-    this.modalService.close();
+    this.broadcastService.broadcastAlert();
   }
 
   // Breadcrumbs
   breadcrumbs = [{ label: 'Home', route: '/dashboard' }];
-
-  dashboardInsight = computed(() => {
-    const velocity = this.metrics().find((m) => m.label === 'Team Velocity');
-    if (velocity) {
-      const direction = velocity.change >= 0 ? 'increased' : 'decreased';
-      return {
-        prefix: `Team velocity has ${direction} by`,
-        value: `${Math.abs(velocity.change)}%`,
-        suffix:
-          'this cycle. Read on for a detailed breakdown of operational efficiency and personnel allocation.',
-      };
-    }
-
-    // Fallback if velocity metric is missing
-    const totalTasks = this.teamMembers().reduce((acc, m) => acc + m.activeTasks, 0);
-    return {
-      prefix: 'Current system load is',
-      value: `${totalTasks} Active Tasks`,
-      suffix: 'distributed across the operational roster.',
-    };
-  });
 
   openSectorAudit(sectorName: string) {
     this.inspector.open({ name: sectorName }, 'sector');

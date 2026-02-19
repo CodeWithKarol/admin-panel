@@ -1,4 +1,4 @@
-import { Component, inject, computed } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AnalyticsService } from '../../../../core/services/analytics/analytics.service';
 import { LucideAngularModule, Shield, AlertTriangle, CheckCircle } from 'lucide-angular';
@@ -118,28 +118,5 @@ export class SquadronMatrixComponent {
   protected readonly AlertTriangle = AlertTriangle;
   protected readonly CheckCircle = CheckCircle;
 
-  squadMetrics = computed(() => {
-    const members = this.analytics.teamMembers();
-    const squads = new Map<string, { count: number; velocity: number; activeTasks: number }>();
-
-    members.forEach((m) => {
-      if (!squads.has(m.squad)) {
-        squads.set(m.squad, { count: 0, velocity: 0, activeTasks: 0 });
-      }
-      const data = squads.get(m.squad)!;
-      data.count++;
-      data.velocity += m.completedTasks;
-      data.activeTasks += m.activeTasks;
-    });
-
-    return Array.from(squads.entries())
-      .map(([name, data]) => ({
-        name,
-        count: data.count,
-        personnel: Array(data.count).fill(0),
-        velocity: data.velocity,
-        strain: data.count ? data.activeTasks / data.count : 0,
-      }))
-      .sort((a, b) => b.strain - a.strain);
-  });
+  squadMetrics = this.analytics.squadMetrics;
 }

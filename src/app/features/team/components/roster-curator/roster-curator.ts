@@ -118,20 +118,10 @@ export class RosterCuratorComponent {
   activeSquad = this.analytics.activeSquad;
   activeStatusFilter = this.analytics.activeStatusFilter;
   sortBy = this.analytics.sortBy;
+  sortOptions = this.analytics.sortOptions;
+  statusFilters = this.analytics.statusFilters;
 
   squads = SQUADS;
-
-  sortOptions = [
-    { label: 'Name', value: 'NAME' as const },
-    { label: 'Impact', value: 'IMPACT' as const },
-    { label: 'Burden', value: 'BURDEN' as const },
-  ];
-
-  statusFilters = [
-    { label: 'All', value: 'ALL' as const },
-    { label: 'Active_Only', value: 'ACTIVE_ONLY' as const },
-    { label: 'High_Load', value: 'HIGH_LOAD' as const },
-  ];
 
   protected readonly Search = Search;
   protected readonly ArrowUpDown = ArrowUpDown;

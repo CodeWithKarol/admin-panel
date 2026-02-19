@@ -1,9 +1,10 @@
-import { Component, input, output, OnInit } from '@angular/core';
+import { Component, input, output, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TeamMember } from '../../../../core/models/analytics.models';
 import { LucideAngularModule, Save, X, Fingerprint, RefreshCcw } from 'lucide-angular';
 import { SQUADS, ROLES } from '../../../../core/models/team.constants';
+import { AnalyticsService } from '../../../../core/services/analytics/analytics.service';
 
 @Component({
   selector: 'app-user-form',
@@ -186,6 +187,8 @@ export class UserFormComponent implements OnInit {
   identityCommitted = output<TeamMember>();
   identityAborted = output<void>();
 
+  private analyticsService = inject(AnalyticsService);
+
   protected readonly Save = Save;
   protected readonly X = X;
   protected readonly Fingerprint = Fingerprint;
@@ -222,39 +225,25 @@ export class UserFormComponent implements OnInit {
   }
 
   regenerateAvatar() {
-    const seed = (Math.floor(Math.random() * 900) + 100).toString();
-    this.formData.avatar = `https://i.pravatar.cc/150?u=${seed}`;
+    this.formData.avatar = this.analyticsService.generateAvatarUrl();
   }
 
   submit() {
-    const specs = this.specInput
-      .split(',')
-      .map((s) => s.trim().toUpperCase())
-      .filter((s) => s !== '');
-
     const existingUser = this.user();
     if (existingUser) {
-      this.identityCommitted.emit({
-        ...existingUser,
-        ...this.formData,
-        specializations: specs,
-        squad: this.formData.squad,
-        avatar: this.formData.avatar,
-      });
+      this.identityCommitted.emit(
+        this.analyticsService.prepareUpdate(existingUser, {
+          ...this.formData,
+          specInput: this.specInput,
+        }),
+      );
     } else {
-      // Identity Initialization (Create Mode)
-      // Extract seed from avatar if possible to stay consistent with test
-      const seedMatch = this.formData.avatar.match(/u=(\d+)/);
-      const newId = seedMatch ? seedMatch[1] : (Math.floor(Math.random() * 900) + 100).toString();
-
-      this.identityCommitted.emit({
-        id: newId,
-        ...this.formData,
-        specializations: specs,
-        activeTasks: 0,
-        completedTasks: 0,
-        avatar: this.formData.avatar, // Ensure we use the current avatar
-      });
+      this.identityCommitted.emit(
+        this.analyticsService.createTeamMember({
+          ...this.formData,
+          specInput: this.specInput,
+        }),
+      );
     }
   }
 }

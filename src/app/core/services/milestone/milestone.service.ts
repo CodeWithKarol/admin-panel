@@ -1,4 +1,4 @@
-import { Injectable, signal } from '@angular/core';
+import { Injectable, signal, computed } from '@angular/core';
 import { ProjectMilestone } from '../../models/milestone.models';
 
 export type { ProjectMilestone };
@@ -58,6 +58,54 @@ export class MilestoneService {
       internalNotes: 'Final approval from DevOps required before live cutover.',
     },
   ]);
+
+  // Filtering State
+  searchQuery = signal('');
+  statusFilter = signal<string>('all');
+
+  filteredMilestones = computed(() => {
+    const query = this.searchQuery().toLowerCase();
+    const filter = this.statusFilter();
+
+    return this.milestones().filter((m) => {
+      const matchesSearch =
+        m.projectName.toLowerCase().includes(query) ||
+        (m.missionStatement?.toLowerCase() || '').includes(query);
+      const matchesFilter = filter === 'all' || m.status === filter;
+
+      return matchesSearch && matchesFilter;
+    });
+  });
+
+  calculateProgress(milestone: ProjectMilestone): number {
+    const start = milestone.startDate.getTime();
+    const end = milestone.endDate.getTime();
+    const now = new Date().getTime();
+
+    if (now < start) return 0;
+    if (now > end) return 100;
+
+    return Math.round(((now - start) / (end - start)) * 100);
+  }
+
+  formatDateForInput(date: Date): string {
+    if (!date) return '';
+    return new Date(date).toISOString().split('T')[0];
+  }
+
+  prepareMilestone(data: Partial<ProjectMilestone>, existingId?: string): ProjectMilestone {
+    return {
+      id: existingId || Math.random().toString(36).substring(7),
+      projectName: data.projectName || 'UNNAMED_PROTOCOL',
+      phase: data.phase || 'Research',
+      status: data.status || 'active',
+      startDate: data.startDate || new Date(),
+      endDate: data.endDate || new Date(),
+      missionStatement: data.missionStatement || '',
+      statusReport: data.statusReport || '',
+      internalNotes: data.internalNotes || '',
+    };
+  }
 
   addMilestone(milestone: ProjectMilestone) {
     this.milestones.update((current) => [...current, milestone]);
