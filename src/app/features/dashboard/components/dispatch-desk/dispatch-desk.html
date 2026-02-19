@@ -1,0 +1,39 @@
+<div class="space-y-8">
+  <div class="flex items-center justify-between border-b border-brand-200 pb-4">
+    <div class="flex items-center gap-3">
+      <div class="w-2 h-2 rounded-full bg-accent-terracotta animate-pulse"></div>
+      <h3 class="text-xs font-bold uppercase tracking-[0.3em] text-accent-charcoal">Latest_Dispatches</h3>
+    </div>
+    <lucide-icon [name]="Radio" class="w-4 h-4 text-brand-300"></lucide-icon>
+  </div>
+
+  <div class="space-y-1 max-h-[500px] overflow-y-auto scrollbar-hide pr-2">
+    @for (dispatch of activities(); track dispatch.id) {
+      <div class="group relative py-4 border-b border-brand-100 last:border-0 hover:bg-brand-100/30 transition-colors px-2 animate-in fade-in slide-in-from-top-2 duration-500">
+        <div class="flex items-center justify-between mb-2">
+          <div class="flex items-center gap-3">
+            <span class="text-[9px] font-mono font-bold px-1.5 py-0.5 border" 
+                  [ngClass]="{
+                    'border-accent-terracotta text-accent-terracotta bg-accent-terracotta/5': dispatch.type === 'URGENT',
+                    'border-brand-200 text-brand-500 bg-brand-50': dispatch.type !== 'URGENT'
+                  }">
+              {{ dispatch.type }}
+            </span>
+            <span class="text-[10px] font-black text-brand-800 uppercase tracking-widest">{{ dispatch.sender }}</span>
+          </div>
+          <span class="text-[9px] font-mono text-brand-400 font-bold tracking-tighter">{{ dispatch.timestamp | date:'HH:mm:ss' }}</span>
+        </div>
+        
+        <p class="text-[11px] font-mono text-brand-600 leading-relaxed uppercase tracking-tight pl-2 border-l-2 border-brand-200 group-hover:border-accent-terracotta transition-colors animate-typewriter">
+          {{ dispatch.message }}
+        </p>
+      </div>
+    }
+
+    @if (activities().length === 0) {
+      <div class="py-12 text-center">
+        <p class="text-[10px] font-serif italic text-brand-300 uppercase tracking-[0.2em]">Telemetry_Silent...</p>
+      </div>
+    }
+  </div>
+</div>

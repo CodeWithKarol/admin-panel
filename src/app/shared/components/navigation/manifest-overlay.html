@@ -1,0 +1,30 @@
+@if (isTransitioning()) {
+  <div class="fixed inset-0 bg-[#050505] z-[9999] flex flex-col items-center justify-center animate-in fade-in duration-300 overflow-hidden">
+    
+    <!-- Scrawling Telemetry Background -->
+    <div class="absolute inset-0 opacity-[0.03] font-mono text-[10px] pointer-events-none p-4 leading-relaxed uppercase tracking-tighter animate-scrawl">
+      @for (i of [1,2,3,4,5,6,7,8,9,10]; track i) {
+        <p>FETCHING_PERSONNEL_BIO_SIGNATURES_FROM_NODE_04... SUCCESS</p>
+        <p>DECRYPTING_EDITORIAL_MANIFEST_V4.2... OK</p>
+        <p>SYNCHRONIZING_CORE_DIRECTORIES... PENDING</p>
+        <p>MAPPING_OPERATIONAL_HIERARCHY... DONE</p>
+        <p>INITIALIZING_SECURE_TELEMETRY_LINK... ACTIVE</p>
+        <p class="mb-4">SYNC_UPSTREAM_CLEAN // NODE_0{{i}}</p>
+      }
+    </div>
+
+    <!-- Editorial Centerpiece -->
+    <div class="relative space-y-6 text-center animate-in zoom-in-95 duration-1000">
+      <h2 class="text-4xl md:text-5xl font-black italic text-white tracking-tight">Initializing Manifest.</h2>
+      <div class="w-64 h-[1px] bg-white/10 mx-auto relative overflow-hidden">
+        <div class="absolute inset-y-0 left-0 bg-white w-full -translate-x-full animate-[progress_0.8s_ease-in-out_forwards]"></div>
+      </div>
+      <p class="text-[10px] font-black text-neutral-500 uppercase tracking-[0.4em]">Secure_Node_Connection_Established</p>
+    </div>
+
+    <!-- Final Operational Note -->
+    <div class="absolute bottom-12 text-[9px] font-mono text-neutral-700 uppercase tracking-widest">
+      AXON // EDITORIAL_SYSTEM_V4
+    </div>
+  </div>
+}

@@ -1,0 +1,108 @@
+<div class="animate-in fade-in duration-700 space-y-8 pb-24">
+  <!-- Smart Header -->
+  <app-dashboard-header
+    title="The Daily Sync"
+    [lastUpdated]="lastUpdated()"
+    [isRefreshing]="isRefreshing()"
+    (refresh)="refresh()"
+    [breadcrumbs]="breadcrumbs"
+    [systemStatus]="'Optimal'"
+    [environment]="'Production'"
+  >
+    <button
+      header-actions
+      (click)="broadcastAlert(alertModal)"
+      class="px-6 py-4 bg-accent-charcoal text-white text-xs font-black uppercase tracking-widest hover:bg-accent-terracotta transition-all shadow-lg shadow-accent-charcoal/20 flex items-center gap-2 group"
+    >
+      <lucide-icon
+        [name]="Radio"
+        class="w-4 h-4 group-hover:scale-110 transition-transform"
+      ></lucide-icon>
+      Broadcast_Alert
+    </button>
+  </app-dashboard-header>
+
+  <ng-template #alertModal>
+    <div class="space-y-6">
+      <div
+        class="p-4 bg-amber-50 border border-amber-200 rounded-sm text-amber-800 text-sm font-serif italic"
+      >
+        "Initiating a broadcast override will interrupt all active operator streams. This action is
+        logged permanently."
+      </div>
+
+      <div class="space-y-2">
+        <label
+          for="broadcastConfirm"
+          class="text-[10px] font-black uppercase tracking-widest text-brand-400"
+          >Confirmation_Key</label
+        >
+        <input
+          id="broadcastConfirm"
+          type="text"
+          placeholder="ENTER 'CONFIRM' TO PROCEED"
+          class="w-full bg-brand-50 border border-brand-200 p-3 text-sm focus:border-accent-terracotta transition-colors font-mono"
+        />
+      </div>
+
+      <div class="flex justify-end gap-4 pt-4 border-t border-brand-100">
+        <button
+          (click)="modalService.close()"
+          class="px-4 py-2 text-xs font-bold uppercase tracking-widest text-brand-500 hover:text-brand-800 transition-colors"
+        >
+          Cancel
+        </button>
+        <button
+          (click)="confirmBroadcast()"
+          class="px-6 py-2 bg-accent-terracotta text-white text-xs font-black uppercase tracking-widest hover:bg-red-600 transition-colors shadow-lg shadow-accent-terracotta/20"
+        >
+          Execute_Broadcast
+        </button>
+      </div>
+    </div>
+  </ng-template>
+
+  <!-- Content Deck -->
+  <div class="max-w-2xl text-xl font-serif text-brand-800 leading-relaxed text-balance mt-8 mb-16">
+    {{ dashboardInsight().prefix }}
+    <span class="font-bold text-accent-terracotta">{{ dashboardInsight().value }}</span>
+    {{ dashboardInsight().suffix }}
+  </div>
+
+  <!-- Primary Editorial Grid -->
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20 items-start">
+    <!-- Left Area: Core Analysis (8 cols) -->
+    <div class="lg:col-span-8 space-y-16 lg:space-y-24 border-r border-brand-200/50 pr-0 lg:pr-12">
+      <!-- Indicators -->
+      <app-editorial-metrics [metrics]="metrics()"></app-editorial-metrics>
+
+      <!-- Central Visual -->
+      <div class="pt-8">
+        <app-workload-chart
+          [chartData]="workloadChartData()"
+          [chartOptions]="barChartOptions"
+          [chartType]="barChartType"
+          (sectorSelected)="openSectorAudit($event)"
+        >
+        </app-workload-chart>
+      </div>
+
+      <!-- Operations Matrix -->
+      <app-squadron-matrix></app-squadron-matrix>
+    </div>
+
+    <!-- Right Area: Logistics (4 cols) -->
+    <div class="lg:col-span-4 space-y-16 lg:space-y-24 px-0 lg:px-4">
+      <app-active-personnel [members]="teamMembers()"></app-active-personnel>
+
+      <div class="pt-8 border-t border-brand-100">
+        <app-dispatch-desk></app-dispatch-desk>
+      </div>
+    </div>
+  </div>
+
+  <!-- Full Width Section at Bottom -->
+  <div class="pt-16 border-t border-brand-800">
+    <app-milestone-timeline></app-milestone-timeline>
+  </div>
+</div>
